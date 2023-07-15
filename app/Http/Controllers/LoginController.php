@@ -45,23 +45,16 @@ class LoginController extends Controller
         ]);
 
         $credentials = $request->only('email', 'password');
-        // if (Auth::attempt($credentials)) {
-        //     return redirect()->intended('/dashboard')
-        //         ->withSuccess('You have Successfully loggedin');
-        // }
 
         if (Auth::attempt($credentials)) {
             if (Auth::user()->role == 'admin') {
                 return redirect()->route('dashboard.index')
                     ->withSuccess('You have Successfully logged in as an admin');
             } else if (Auth::user()->role == 'pengurus') {
-                return redirect()->route('laporan-rekap-index')
+                return redirect()->route('dashboard.index')
                     ->withSuccess('You have Successfully logged in');
             }
         }
-
-
-
         return redirect("/dashboard")->withSuccess('Oppes! You have entered invalid credentials');
     }
 
@@ -121,6 +114,8 @@ class LoginController extends Controller
     {
         Session::flush();
         Auth::logout();
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
 
         return Redirect('/');
     }

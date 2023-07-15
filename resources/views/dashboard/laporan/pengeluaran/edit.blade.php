@@ -18,55 +18,38 @@
                         @csrf
                         @method('PUT')
                         <div>
-                            @if ($errors->any())
-                                <div class="mb-3">
-                                    <div class="bg-danger px-4 py-2 text-white font-weight-bold">
-                                        There's something wrong!
-                                    </div>
-                                    <div class="bg-danger text-white">
-                                        <p>
-                                        <ul>
-                                            @foreach ($errors->all() as $error)
-                                                <li>{{ $error }}</li>
-                                            @endforeach
-                                        </ul>
-                                        </p>
-                                    </div>
+                            <div class="form-group">
+                                <label>Keterangan</label>
+                                <div>
+                                    <input type="text"
+                                        class="form-control @error('keterangan_pengeluaran') is-invalid @enderror"
+                                        id="keterangan_pengeluaran" name="keterangan_pengeluaran"required autofocus
+                                        value="{{ $pengeluaran->keterangan_pengeluaran }}" placeholder="Infaq Jamaah" />
                                 </div>
-                            @endif
-                        </div>
-
-                        <div class="form-group">
-                            <label>Keterangan</label>
-                            <div>
-                                <input type="text"
-                                    class="form-control @error('keterangan_pengeluaran') is-invalid @enderror"
-                                    id="keterangan_pengeluaran" name="keterangan_pengeluaran"required autofocus
-                                    value="{{ $pengeluaran->keterangan_pengeluaran }}" placeholder="Infaq Jamaah" />
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Pengeluaran</label>
-                            <input type="text" class="form-control input-harga" name="jumlah_pengeluaran"
-                                id="input-harga" placeholder="Jumlah" value="{{ $pengeluaran->jumlah_pengeluaran }}">
-                        </div>
-                        <div class="form-group">
-                            <label>Tanggal</label>
-                            <input class="form-control" type="date" name="tanggal_pengeluaran" id="tanggal_pengeluaran"
-                                value="{{ $pengeluaran->tanggal_pengeluaran }}">
-                        </div>
-                        <div class="form-group">
-                            <div>
-                                <button type="submit" class="btn btn-primary waves-effect waves-light"
-                                    onclick="disableButton(this);">
-                                    <span id="buttonText">Simpan</span>
-                                </button>
-
-                                <a href="javascript:window.history.go(-1)" class="btn btn-secondary waves-effect m-l-5">
-                                    Batal
-                                </a>
+                            <div class="form-group">
+                                <label>Pengeluaran</label>
+                                <input type="text" class="form-control input-harga" name="jumlah_pengeluaran"
+                                    id="input-harga" placeholder="Jumlah"
+                                    value="{{ 'Rp ' . number_format($pengeluaran->jumlah_pengeluaran, 0, ',', '.') }}">
                             </div>
-                        </div>
+                            <div class="form-group">
+                                <label>Tanggal</label>
+                                <input class="form-control" type="date" name="tanggal_pengeluaran"
+                                    id="tanggal_pengeluaran" value="{{ $pengeluaran->tanggal_pengeluaran }}">
+                            </div>
+                            <div class="form-group">
+                                <div>
+                                    <button type="submit" class="btn btn-primary waves-effect waves-light"
+                                        onclick="disableButton1(this);">
+                                        <span id="buttonText">Simpan</span>
+                                    </button>
+
+                                    <a href="javascript:window.history.go(-1)" class="btn btn-secondary waves-effect m-l-5">
+                                        Batal
+                                    </a>
+                                </div>
+                            </div>
                     </form>
                 </div>
             </div>

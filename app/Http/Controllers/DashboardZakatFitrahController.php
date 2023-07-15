@@ -17,7 +17,7 @@ class DashboardZakatFitrahController extends Controller
      */
     public function index()
     {
-        $zakat_fitrah = ZakatFitrah::get();
+        $zakat_fitrah = ZakatFitrah::orderBy('created_at', 'desc')->get();
         $total_beras = $zakat_fitrah->sum('jumlah_beras');
         $total_uang = $zakat_fitrah->sum('jumlah_uang');
 
@@ -38,9 +38,7 @@ class DashboardZakatFitrahController extends Controller
      */
     public function create()
     {
-
-
-        return view('dashboard.zakat.zakat_fitrah.tambah', $data);
+        return view('dashboard.zakat.zakat_fitrah.tambah',);
     }
 
     /**
@@ -51,19 +49,33 @@ class DashboardZakatFitrahController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate(
+            $request,
+            [
+                'nama' => 'required',
+                'alamat' => 'nullable',
+                'tanggal' => 'required',
+                'jumlah_beras' => 'required_without_all:jumlah_uang',
+                'jumlah_uang' => 'required_without_all:jumlah_beras'
+            ],
+            [
+                'nama.required' => 'Nama tidak boleh kosong',
+                'tanggal.required' => 'Tanggal tidak boleh kosong',
+                'jumlah_beras.required_without_all' => 'Jumlah Beras atau Jumlah Uang harus diisi salah satu',
+                'jumlah_uang.required_without_all' => 'Jumlah Beras atau Jumlah Uang harus diisi salah satu'
+            ]
+        );
+
+        // $beras = str_replace(',', '.', $request->jumlah_beras);
+
         ZakatFitrah::create([
             "nama" => $request->nama,
             "alamat" => $request->alamat,
             "tanggal" => $request->tanggal,
             "jumlah_beras" => $request->jumlah_beras,
             "jumlah_uang" => $request->jumlah_uang,
-            // "kode_jenis_zakat" => $request->kode_jenis_zakat,
-            // "kode_isi_zakat" => $request->kode_isi_zakat,
         ]);
-
-        return redirect()->intended('/zakat-zakat_fitrah');
-
-        // return redirect()->intended('/zakat-zakat_fitrah');
+        return redirect()->route('dashboard.zakat-zakat_fitrah.index')->with('success', 'Data Zakat Fitrah Berhasil Ditambahkan');
     }
 
     /**
@@ -83,9 +95,11 @@ class DashboardZakatFitrahController extends Controller
      * @param  \App\Models\ZakatFitrah  $zakatFitrah
      * @return \Illuminate\Http\Response
      */
-    public function edit(ZakatFitrah $zakatFitrah)
+    public function edit($id)
     {
-        //
+        $zakat_fitrah = ZakatFitrah::find($id);
+
+        return view('dashboard.zakat.zakat_fitrah.edit', compact('zakat_fitrah'));
     }
 
     /**
@@ -95,9 +109,34 @@ class DashboardZakatFitrahController extends Controller
      * @param  \App\Models\ZakatFitrah  $zakatFitrah
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ZakatFitrah $zakatFitrah)
+    public function update(Request $request, $id)
     {
-        //
+        $this->validate(
+            $request,
+            [
+                'nama' => 'required',
+                'alamat' => 'nullable',
+                'tanggal' => 'required',
+                'jumlah_beras' => 'required_without_all:jumlah_uang',
+                'jumlah_uang' => 'required_without_all:jumlah_beras'
+            ],
+            [
+                'nama.required' => 'Nama tidak boleh kosong',
+                'tanggal.required' => 'Tanggal tidak boleh kosong',
+                'jumlah_beras.required_without_all' => 'Jumlah Beras atau Jumlah Uang harus diisi salah satu',
+                'jumlah_uang.required_without_all' => 'Jumlah Beras atau Jumlah Uang harus diisi salah satu',
+            ]
+        );
+        $zakat_fitrah = ZakatFitrah::findOrFail($id);
+
+        $zakat_fitrah->update([
+            "nama" => $request->nama,
+            "alamat" => $request->alamat,
+            "tanggal" => $request->tanggal,
+            "jumlah_beras" => $request->jumlah_beras,
+            "jumlah_uang" => $request->jumlah_uang,
+        ]);
+        return redirect()->route('dashboard.zakat-zakat_fitrah.index')->with('success', 'Data Zakat Fitrah Berhasil Diubah');
     }
 
     /**

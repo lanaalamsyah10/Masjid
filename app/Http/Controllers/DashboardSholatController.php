@@ -14,7 +14,7 @@ class DashboardSholatController extends Controller
      */
     public function index()
     {
-        $sholat = Sholat::get();
+        $sholat = Sholat::orderBy('created_at', 'desc')->get();
 
         return view('dashboard.jadwal.sholat.index', [
             'sholat' => $sholat,
@@ -78,18 +78,11 @@ class DashboardSholatController extends Controller
      */
     public function edit($id)
     {
-        $sholat = Sholat::find($id);
+        $sholat = Sholat::findOrFail($id);
 
         return view('dashboard.jadwal.sholat.edit', compact('sholat'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Sholat  $sholat
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         $this->validate(
@@ -103,6 +96,7 @@ class DashboardSholatController extends Controller
                 'imam.required' => 'Nama imam tidak boleh kosong',
             ]
         );
+
         $sholat = Sholat::findOrFail($id);
 
         $sholat->update([
@@ -110,7 +104,7 @@ class DashboardSholatController extends Controller
             'imam' => $request->imam,
         ]);
 
-        return redirect()->route('dashboard.jadwal-sholat.index')->with('success', 'Data Berhasil Ditambahkan');
+        return redirect()->route('dashboard.jadwal-sholat.index')->with('success', 'Data Berhasil Diperbarui');
     }
 
     /**
@@ -119,8 +113,11 @@ class DashboardSholatController extends Controller
      * @param  \App\Models\Sholat  $sholat
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Sholat $sholat)
+    public function destroy($id)
     {
-        //
+        $sholat = Sholat::find($id);
+        $sholat->delete();
+
+        return back()->with('success', 'Data Berhasil Dihapus');
     }
 }

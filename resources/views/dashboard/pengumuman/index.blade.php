@@ -42,26 +42,10 @@
                                             @endif
                                         </td>
                                         <td>{{ $item->judul_pengumuman }}</td>
-                                        <td>{!! Str::limit($item->isi_pengumuman, 30) !!}</td>
+                                        <td>{!! Str::limit(strip_tags($item->isi_pengumuman), 30) !!}</td>
                                         <td>{{ \Carbon\Carbon::parse($item['tanggal'])->format('d-m-Y') }}</td>
                                         <td>{{ $item->waktu }}</td>
                                         <td>{{ $item->tempat }}</td>
-                                        {{-- <td>
-                                            <div class="button-items">
-                                                <a class="btn btn-secondary"
-                                                    href="{{ route('dashboard.pengumuman.show', $item->id) }}"
-                                                    role="button"><i class="mdi mdi-eye"></i></a>
-                                                <a class="btn btn-info"
-                                                    href="{{ route('dashboard.pengumuman.edit', $item->id) }}"
-                                                    role="button"><i class="mdi mdi-lead-pencil"></i></a>
-
-                                                <button type="button" class="btn btn-danger" id="sa-params"
-                                                    value="{{ route('dashboard.pengumuman.destroy', $item->id) }}"><i
-                                                        class="mdi mdi-delete"></i></button>
-
-
-                                            </div>
-                                        </td> --}}
                                         <td>
                                             <div class="d-flex button-items">
                                                 <a class="btn btn-secondary"

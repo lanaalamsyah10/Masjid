@@ -43,7 +43,12 @@ File: Main Css File
 /* ==============
   General
 ===================*/
-
+.dashboard{
+  transition: all 0.3s ease-in-out;
+}
+.dashboard:hover{
+  transform: scale(1.1);
+}
 .bg-register{
   width: 100%;
   height: 95vh;
@@ -2474,14 +2479,14 @@ label {
 }
 
 .round {
-  line-height: 60px;
+  line-height: 23px;
   color: #5b6be8;
-  width: 60px;
-  height: 60px;
-  font-size: 26px;
+  width: 25px;
+  height: 25px;
+  font-size: 15px;
   display: inline-block;
   font-weight: 400;
-  border: 3px solid #f8f8fe;
+  border: 2px solid #f8f8fe;
   text-align: center;
   border-radius: 50%;
   background: #e1e4fb;

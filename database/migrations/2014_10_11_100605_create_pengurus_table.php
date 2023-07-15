@@ -15,7 +15,11 @@ return new class extends Migration
     {
         Schema::create('pengurus', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_pengurus');
+            $table->string('name');
+            $table->string('jabatan');
+            $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan']);
+            $table->string('no_hp', 15);
+            $table->longText('alamat');
             $table->timestamps();
         });
     }

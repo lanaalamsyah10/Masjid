@@ -9,8 +9,8 @@
             <div class="row">
                 <div class="top-search">
                     <div class="input-group">
-                        <form action="#">
-                            <input type="text" name="text" class="form-control" placeholder="Search">
+                        <form action="{{ route('pengumuman.search') }}" method="GET">
+                            <input type="text" name="search" class="form-control" placeholder="Search">
                             <button type="submit">
                                 <i class="fas fa-search"></i>
                             </button>
@@ -58,7 +58,7 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Jadwal</a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ route('jadwal.sholat') }}">Jadwal Sholat</a></li>
+                            <li><a href="{{ route('jadwal.sholat') }}">Jadwal Imam</a></li>
                             <li><a href="{{ route('jadwal.pengajian') }}">Jadwal Pengajian</a></li>
                         </ul>
                     </li>

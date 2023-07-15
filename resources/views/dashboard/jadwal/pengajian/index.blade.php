@@ -21,9 +21,10 @@
                         <table id="datatable" class="table">
                             <thead>
                                 <tr>
-                                    <td>No</td>
+                                    <th>No</th>
                                     <th>Hari</th>
                                     <th>Nama Pemateri</th>
+                                    <th>Materi Kajian</th>
                                     <th>Waktu</th>
                                     <th>Aksi</th>
                                 </tr>
@@ -34,6 +35,7 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $item->hari }}</td>
                                         <td>{{ $item->pemateri }}</td>
+                                        <td>{{ $item->materi }}</td>
                                         <td>{{ $item->waktu . ' WIB' }}</td>
                                         <td>
                                             <div class="d-flex button-items">
@@ -47,9 +49,6 @@
                                                     <button type="submit" class="btn btn-danger"><i
                                                             class="mdi mdi-delete"></i></button>
                                                 </form>
-                                                {{-- <button type="button" class="btn btn-danger" id="sa-params"
-                                                    value="{{ route('dashboard.jadwal-pengajian.destroy', $item->id) }}"><i
-                                                        class="mdi mdi-delete"></i></button> --}}
                                             </div>
                                         </td>
                                     </tr>

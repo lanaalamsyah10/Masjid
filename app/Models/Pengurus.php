@@ -9,5 +9,8 @@ class Pengurus extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id'], $table = 'pengurus';
+    protected $guarded = [];
+    protected $table = 'pengurus';
+
+    // protected $guarded = ['id'], $table = 'pengurus';
 }

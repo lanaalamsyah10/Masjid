@@ -37,21 +37,15 @@
 </head>
 
 <body>
-    {{-- <img src="{{ asset('assets/img/error.svg') }}" alt="" width="100%" height="300px"> --}}
     <div class="error-page-area default-padding">
         <div class="container">
             <div class="row">
                 <div class="col-md-8 col-md-offset-2 text-center content">
                     <h1>404</h1>
-                    <h2>Sorry Page Was Not Found!</h2>
-                    <p>
-                        The page you are looking is not available or has been removed. Try going to Home Page by using
-                        the button below.
-                    </p>
-                    <a class="btn btn-dark effect btn-md" href="javascript:window.history.go(-1)"> <i
-                            class="fa fa-arrow-left" aria-hidden="true"></i> Back To Home</a>
-                    {{-- <a class="btn btn-dark border btn-md" href="#">Contact Us</a> --}}
+                    <h3>Maaf, halaman yang anda akses tidak ada!</h3>
 
+                    <a class="btn btn-dark effect btn-md" href="javascript:window.history.go(-1)"> <i
+                            class="fa fa-arrow-left" aria-hidden="true"></i> Kembali</a>
                 </div>
             </div>
         </div>

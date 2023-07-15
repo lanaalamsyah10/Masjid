@@ -14,7 +14,7 @@ class DashboardPengajianController extends Controller
      */
     public function index()
     {
-        $pengajian = Pengajian::get();
+        $pengajian = Pengajian::orderBy('created_at', 'desc')->get();
 
         return view('dashboard.jadwal.pengajian.index', [
             'pengajian' => $pengajian,
@@ -44,11 +44,13 @@ class DashboardPengajianController extends Controller
             [
                 'hari' => 'required',
                 'pemateri' => 'required',
+                'materi' => 'required',
                 'waktu' => 'required',
             ],
             [
                 'hari.required' => 'Hari tidak boleh kosong',
                 'pemateri.required' => 'Pemateri tidak boleh kosong',
+                'materi.required' => 'Materi tidak boleh kosong',
                 'waktu.required' => 'Waktu tidak boleh kosong',
             ]
         );
@@ -56,6 +58,7 @@ class DashboardPengajianController extends Controller
         Pengajian::create([
             'hari' => $request->hari,
             'pemateri' => $request->pemateri,
+            'materi' => $request->materi,
             'waktu' => $request->waktu,
         ]);
 
@@ -100,11 +103,13 @@ class DashboardPengajianController extends Controller
             [
                 'hari' => 'required',
                 'pemateri' => 'required',
+                'materi' => 'required',
                 'waktu' => 'required',
             ],
             [
                 'hari.required' => 'Hari tidak boleh kosong',
                 'pemateri.required' => 'Pemateri tidak boleh kosong',
+                'materi.required' => 'Materi tidak boleh kosong',
                 'waktu.required' => 'Waktu tidak boleh kosong',
             ]
         );
@@ -114,6 +119,7 @@ class DashboardPengajianController extends Controller
         $pengajian->update([
             'hari' => $request->hari,
             'pemateri' => $request->pemateri,
+            'materi' => $request->materi,
             'waktu' => $request->waktu,
         ]);
 

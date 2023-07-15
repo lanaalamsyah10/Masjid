@@ -11,13 +11,13 @@
         <div class="col-12">
             <div class="card m-b-30">
                 <div class="card-body">
+
                     <div class="">
-                        @if ($->gambar)
+                        @if ($pengumumanMasjid->gambar)
                             <img src="{{ Storage::url($pengumumanMasjid->gambar) }}" class="img-fluid"
                                 alt="Responsive image">
-                        @elsepengumumanMasjid
+                        @else
                         @endif
-
                     </div>
                     <h4 class="mt-3 header-title">{{ $pengumumanMasjid->judul_pengumuman }}</h4>
                     <p class="text-muted font-14"><i class="mdi mdi-calendar-clock"></i>

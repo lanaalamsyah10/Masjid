@@ -11,8 +11,16 @@
             text-align: center
         }
     </style>
-    <div class="default-padding">
+    <section class="event-area carousel-shadow single-view default-padding">
         <div class="container">
+            <div class="row">
+                <div class="site-heading text-center">
+                    <div class="col-md-8 col-md-offset-2">
+                        <h2>Jadwal Imam </h2>
+                    </div>
+                </div>
+            </div>
+
             <div class="container mt-5">
                 <div class="card">
                     <div class="table-responsive px-3 py-3">
@@ -39,33 +47,5 @@
                 </div>
             </div>
         </div>
-    </div>
-
-
-    {{-- <div class="our-featues-area inc-trending-courses about-area default-padding">
-        <div class="container">
-            <div class="card" style="box-shadow: 5px 5px 50px 5px lightblue;">
-                <div class="card-body" style="padding: 20px">
-                    <table id="datatable" style="width: 100%;" class="table table-striped table-bordered">
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Waktu</th>
-                                <th>Nama Imam</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($sholat as $item)
-                                <tr>
-                                    <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $item->waktu }}</td>
-                                    <td>{{ $item->imam }}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div> --}}
+    </section>
 @endsection

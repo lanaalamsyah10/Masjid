@@ -64,7 +64,7 @@
                                             <label for="gambar" class="d-block">Upload Gambar</label>
                                             <div class="custom-file">
                                                 <input type="file" class="custom-file-input" id="gambar"name="gambar"
-                                                    required onchange="previewImage()">
+                                                    value="{{ old('gambar') }}" required onchange="previewImage()">
                                                 @error('gambar')
                                                     <div class="invalid-feedback">
                                                         {{ $message }}
@@ -76,7 +76,7 @@
                                                 <label>Keterangan</label>
                                                 <div>
                                                     <textarea required class="form-control @error('isi_pengumuman') is-invalid @enderror" rows="5"
-                                                        name="isi_pengumuman" id="deskripsi">{{ old('isi_pengumuman') }}</textarea>
+                                                        name="isi_pengumuman" id="deskripsi">{{ htmlspecialchars(old('isi_pengumuman')) }}</textarea>
                                                     @error('isi_pengumuman')
                                                         <div class="invalid-feedback">
                                                             {{ $message }}

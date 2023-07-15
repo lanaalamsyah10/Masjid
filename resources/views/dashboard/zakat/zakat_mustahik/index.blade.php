@@ -12,7 +12,8 @@
             <div class="card m-b-30">
                 <div class="card-body">
                     <div class="text-left mb-4">
-                        <a class="btn btn-success" href="{{ url('zakat-zakat_mustahik/create') }}" role="button">Tambah
+                        <a class="btn btn-success" href="{{ route('dashboard.zakat-zakat_mustahik.create') }}"
+                            role="button">Tambah
                             Data</a>
                     </div>
                     <div class="table-responsive">
@@ -36,12 +37,17 @@
                                         <td>
                                             <div class="d-flex button-items">
                                                 <a class="btn btn-info"
-                                                    href="{{ route('dashboard.jadwal-pengajian.edit', $item->id) }}"
+                                                    href="{{ route('dashboard.zakat-zakat_mustahik.edit', $item->id) }}"
                                                     role="button"><i class="mdi mdi-lead-pencil"></i></a>
 
-                                                <button type="button" class="btn btn-danger" id="sa-params"
-                                                    value="{{ route('dashboard.jadwal-pengajian.destroy', $item->id) }}"><i
-                                                        class="mdi mdi-delete"></i></button>
+                                                <form
+                                                    action="{{ route('dashboard.zakat-zakat_mustahik.destroy', $item->id) }}"
+                                                    method="POST" onsubmit="return deleteConfirmation(event)">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger"><i
+                                                            class="mdi mdi-delete"></i></button>
+                                                </form>
                                             </div>
                                         </td>
                                     </tr>

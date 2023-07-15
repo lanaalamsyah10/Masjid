@@ -20,7 +20,7 @@ class UserAccess
             return $next($request);
         }
 
-        return to_route('dashboard.pengumuman.index')->with(['error' => 'You have not admin access']);
+        return to_route('dashboard.index')->with(['error' => 'You have not admin access']);
         /* return response()->view('errors.check-permission'); */
     }
 }

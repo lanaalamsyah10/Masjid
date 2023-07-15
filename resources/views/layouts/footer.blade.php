@@ -22,13 +22,13 @@
                     <h4 class="text-uppercase fw-bold my-4">
                         Menu
                     </h4>
-                    <a href="" class="text-reset">
+                    <a href="{{ route('jadwal.pengajian') }}" class="text-reset">
                         <p>Jadwal Pengajian</p>
                     </a>
-                    <a href="" class="text-reset">
+                    <a href="{{ route('jadwal.sholat') }}" class="text-reset">
                         <p>Jadwal Sholat</p>
                     </a>
-                    <a href="" class="text-reset">
+                    <a href="{{ route('profil.laporan') }}" class="text-reset">
                         <p>Laporan Kas</p>
                     </a>
                 </div>

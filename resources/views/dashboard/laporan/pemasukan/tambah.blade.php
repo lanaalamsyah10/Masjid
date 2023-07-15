@@ -33,7 +33,8 @@
                                 <label>Pemasukan</label>
                                 <input type="text"
                                     class="form-control input-harga  @error('jumlah_pemasukan') is-invalid @enderror"
-                                    name="jumlah_pemasukan" id="input-harga" placeholder="Jumlah">
+                                    name="jumlah_pemasukan" id="input-harga" value="{{ old('jumlah_pemasukan') }}"
+                                    placeholder="Jumlah">
                                 @error('jumlah_pemasukan')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -42,7 +43,8 @@
                                 <div class="form-group">
                                     <label>Tanggal</label>
                                     <input class="form-control  @error('tanggal_pemasukan') is-invalid @enderror"
-                                        type="date" name="tanggal_pemasukan" id="tanggal_pemasukan">
+                                        type="date" name="tanggal_pemasukan" value="{{ old('tanggal_pemasukan') }}"
+                                        id="tanggal_pemasukan">
                                     @error('tanggal_pemasukan')
                                         <div class="invalid-feedback">
                                             {{ $message }}

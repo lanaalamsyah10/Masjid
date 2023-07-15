@@ -18,13 +18,9 @@ return new class extends Migration
             $table->string('name');
             $table->string('username')->uniqiue();
             $table->string('email')->uniqiue();
-            $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan']);
-            $table->bigInteger('no_hp');
-            $table->longText('alamat');
-            $table->foreignId('pengurus_id')->nullable();
-            $table->tinyInteger('role')->default(1);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->tinyInteger('role')->default(1);
             $table->rememberToken();
             $table->timestamps();
         });

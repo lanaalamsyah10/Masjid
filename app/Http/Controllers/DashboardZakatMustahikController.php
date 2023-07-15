@@ -15,7 +15,7 @@ class DashboardZakatMustahikController extends Controller
     public function index()
     {
         return view('dashboard.zakat.zakat_mustahik.index', [
-            'zakat_mustahik' => ZakatMustahik::get(),
+            'zakat_mustahik' => ZakatMustahik::orderBy('created_at', 'desc')->get(),
         ]);
     }
 
@@ -56,7 +56,7 @@ class DashboardZakatMustahikController extends Controller
             'alamat' => $request->alamat,
             'tanggal' => $request->tanggal,
         ]);
-        return redirect()->intended('/zakat-mustahik');
+        return redirect()->route('dashboard.zakat-zakat_mustahik.index')->with('success', 'Data Mustahik Berhasil Ditambahkan');
     }
 
     /**
@@ -76,9 +76,11 @@ class DashboardZakatMustahikController extends Controller
      * @param  \App\Models\ZakatMustahik  $zakatMustahik
      * @return \Illuminate\Http\Response
      */
-    public function edit(ZakatMustahik $zakatMustahik)
+    public function edit($id)
     {
-        //
+        $zakat_mustahik = ZakatMustahik::find($id);
+
+        return view('dashboard.zakat.zakat_mustahik.edit', compact('zakat_mustahik'));
     }
 
     /**
@@ -88,9 +90,29 @@ class DashboardZakatMustahikController extends Controller
      * @param  \App\Models\ZakatMustahik  $zakatMustahik
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, ZakatMustahik $zakatMustahik)
+    public function update(Request $request, $id)
     {
-        //
+        $this->validate(
+            $request,
+            [
+                'nama' => 'required',
+                'alamat' => 'required',
+                'tanggal' => 'required',
+            ],
+            [
+                'nama.required' => 'Nama tidak boleh kosong',
+                'alamat.required' => 'Alamat tidak boleh kosong',
+                'tanggal.required' => 'Tanggal tidak boleh kosong',
+            ]
+        );
+        $zakat_mustahik = ZakatMustahik::findOrFail($id);
+
+        $zakat_mustahik->update([
+            'nama' => $request->nama,
+            'alamat' => $request->alamat,
+            'tanggal' => $request->tanggal,
+        ]);
+        return redirect()->route('dashboard.zakat-zakat_mustahik.index')->with('success', 'Data Mustahik Berhasil Diubah');
     }
 
     /**
@@ -99,8 +121,11 @@ class DashboardZakatMustahikController extends Controller
      * @param  \App\Models\ZakatMustahik  $zakatMustahik
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ZakatMustahik $zakatMustahik)
+    public function destroy($id)
     {
-        //
+        $zakat_mustahik = ZakatMustahik::find($id);
+        $zakat_mustahik->delete();
+
+        return back()->with('success', 'Data Berhasil Dihapus');
     }
 }

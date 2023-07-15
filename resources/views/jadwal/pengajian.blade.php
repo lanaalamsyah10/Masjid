@@ -1,32 +1,54 @@
 @extends('layouts.main')
 @section('title', 'Home')
 @section('content')
-    <div class="our-featues-area inc-trending-courses about-area default-padding">
+    <style>
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            padding: 5px;
+            text-align: center
+        }
+    </style>
+    <section id="event" class="event-area carousel-shadow single-view default-padding">
         <div class="container">
-            <div class="card" style="box-shadow: 5px 5px 50px 5px lightblue;">
-                <div class="card-body" style="padding: 20px">
-                    <table id="datatable" style="width: 100%;" class="table table-striped table-bordered">
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Hari</th>
-                                <th>Nama Pemateri</th>
-                                <th>Waktu</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($pengajian as $item)
-                                <tr>
-                                    <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $item->hari }}</td>
-                                    <td>{{ $item->pemateri }}</td>
-                                    <td>{{ $item->waktu }}</td>
+            <div class="row">
+                <div class="site-heading text-center">
+                    <div class="col-md-8 col-md-offset-2">
+                        <h2>Jadwal Pengajian </h2>
+                    </div>
+                </div>
+            </div>
+            <div class="container mt-5">
+                <div class="card">
+                    <div class="table-responsive px-3 py-3">
+
+                        <table style="width:100%">
+                            <thead>
+                                <tr style="background-color: aliceblue">
+                                    <th>No</th>
+                                    <th>Hari</th>
+                                    <th>Nama Pemateri</th>
+                                    <th>Materi Kajian</th>
+                                    <th>Waktu</th>
                                 </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @foreach ($pengajian as $item)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $item->hari }}</td>
+                                        <td>{{ $item->pemateri }}</td>
+                                        <td>{{ $item->pemateri }}</td>
+                                        <td>{{ $item->waktu }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 @endsection

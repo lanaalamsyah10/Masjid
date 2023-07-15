@@ -58,7 +58,13 @@
             </tr>
         </thead>
         <tbody>
+            @php
+                $jumlahakhir = 0;
+            @endphp
             @foreach ($pemasukan as $data)
+                @php
+                    $jumlahakhir += $data->jumlah_pemasukan;
+                @endphp
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $data['keterangan_pemasukan'] }}</td>
@@ -68,12 +74,12 @@
             @endforeach
             <tr>
                 <td colspan="3">Saldo kas sebelumnya :</td>
-                <th>{{ 'Rp ' . number_format($totalPemasukanSebelum, 0, ',', '.') }}</th>
+                <th>{{ 'Rp ' . number_format($total, 0, ',', '.') }}</th>
             </tr>
 
             <tr>
                 <td colspan="3">Jumlah akhir :</td>
-                <th>{{ 'Rp ' . number_format($totalPemasukan, 0, ',', '.') }}</th>
+                <th>{{ 'Rp ' . number_format($jumlahakhir, 0, ',', '.') }}</th>
             </tr>
         </tbody>
     </table>

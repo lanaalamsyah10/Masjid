@@ -15,7 +15,7 @@ class DashboardPengumumanController extends Controller
      */
     public function index()
     {
-        $pengumumanMasjid = PengumumanMasjid::get();
+        $pengumumanMasjid = PengumumanMasjid::orderBy('created_at', 'desc')->get();
         return view('dashboard.pengumuman.index', [
             'pengumumanMasjid' => $pengumumanMasjid,
         ]);
@@ -85,15 +85,6 @@ class DashboardPengumumanController extends Controller
      */
     public function show($id)
     {
-        // return view('dashboard.pengumuman.show');
-        // $pengumumanMasjid = PengumumanMasjid::whereId($id)->get();
-        // $pengumumanMasjid = PengumumanMasjid::findOrFail($id);
-
-        // return view('dashboard.pengumuman.show', [
-        //     'pengumumanMasjid' => $pengumumanMasjid,
-        // ]);
-
-
         $pengumumanMasjid = PengumumanMasjid::find($id);
         return view('dashboard.pengumuman.show', compact('pengumumanMasjid'));
     }
@@ -125,7 +116,7 @@ class DashboardPengumumanController extends Controller
             'judul_pengumuman' => 'required',
             'isi_pengumuman' => 'required',
             'tanggal' => 'required|date',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
             'tempat' => 'required',
             'waktu' => 'required',
         ]);

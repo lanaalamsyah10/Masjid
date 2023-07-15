@@ -76,8 +76,9 @@
                             </div>
                             <div class="form-group">
                                 <div>
-                                    <button type="submit" class="btn btn-primary waves-effect waves-light">
-                                        Simpan
+                                    <button type="submit" class="btn btn-primary waves-effect waves-light"
+                                        onclick="disableButton3(this);">
+                                        <span id="buttonText">Simpan</span>
                                     </button>
                                     <a href="javascript:window.history.go(-1)" class="btn btn-secondary waves-effect m-l-5">
                                         Batal

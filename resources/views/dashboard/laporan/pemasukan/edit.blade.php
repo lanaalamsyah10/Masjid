@@ -30,7 +30,8 @@
                         <div class="form-group">
                             <label>Pemasukan</label>
                             <input type="text" class="form-control input-harga" name="jumlah_pemasukan" id="input-harga"
-                                placeholder="Jumlah" value="{{ $pemasukan->jumlah_pemasukan }}">
+                                placeholder="Jumlah"
+                                value="{{ 'Rp ' . number_format($pemasukan->jumlah_pemasukan, 0, ',', '.') }}">
                         </div>
                         <div class="form-group">
                             <label>Tanggal</label>
@@ -40,7 +41,7 @@
                         <div class="form-group">
                             <div>
                                 <button type="submit" class="btn btn-primary waves-effect waves-light"
-                                    onclick="disableButton(this);">
+                                    onclick="disableButton1(this);">
                                     <span id="buttonText">Simpan</span>
                                 </button>
 

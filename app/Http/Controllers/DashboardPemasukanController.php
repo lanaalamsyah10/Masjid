@@ -19,7 +19,7 @@ class DashboardPemasukanController extends Controller
     {
         $totalPemasukan = PemasukanKasMasjid::sum('jumlah_pemasukan');
 
-        $pemasukanKas = PemasukanKasMasjid::get();
+        $pemasukanKas = PemasukanKasMasjid::orderBy('created_at', 'desc')->get();
 
         return view('dashboard.laporan.pemasukan.index', [
             'pemasukanKas' => $pemasukanKas,
@@ -92,7 +92,6 @@ class DashboardPemasukanController extends Controller
         $pemasukan = PemasukanKasMasjid::find($id);
 
         return view('dashboard.laporan.pemasukan.edit', compact('pemasukan'));
-        // return view('dashboard.laporan.pemasukan.edit', compact('pemasukan'));
     }
 
     public function update(Request $request, $id)
@@ -130,23 +129,17 @@ class DashboardPemasukanController extends Controller
      * @param  \App\Models\PemasukanKasMasjid  $pemasukan
      * @return \Illuminate\Http\Response
      */
+
     public function destroy($id)
     {
-        // $pemasukan = PemasukanKasMasjid::find($id);
-
-        // if (!$pemasukan) {
-        //     return back()->with('error', 'Data tidak ditemukan');
-        // }
-
-        // $pemasukan->delete();
-
-        // // Delete the associated rekap record
-        // Rekap::where('id_pemasukan', $id)->delete();
-
-        // return back()->with('success', 'Data Berhasil Dihapus');
-
         $pemasukan = PemasukanKasMasjid::findOrFail($id);
         $pemasukan->delete();
+
+        $rekap = Rekap::where('id_pemasukan', $id)->first();
+
+        if ($rekap) {
+            $rekap->delete();
+        }
 
         return back()->with('success', 'Data Berhasil Dihapus');
     }
@@ -161,66 +154,30 @@ class DashboardPemasukanController extends Controller
             'pemasukan' => $pemasukan,
             'totalPemasukan' => $totalPemasukan,
         ]);
-        return $pdf->download('laporan-pemasukan-pdf.pdf');
+        return $pdf->download('laporan-pemasukan-kas.pdf');
     }
 
-    // public function cetak_perbulan()
-    // {
-    //     $totalPemasukan = PemasukanKasMasjid::sum('jumlah_pemasukan');
-    //     $pemasukan = PemasukanKasMasjid::all();
-
-    //     $pdf = PDF::loadview('dashboard.laporan.pemasukan.cetak_perbulan', [
-    //         'pemasukan' => $pemasukan,
-    //         'totalPemasukan' => $totalPemasukan,
-    //     ]);
-    //     return $pdf->download('laporan-pemasukan_perbulan-pdf.pdf');
-    // }
-
-    // public function cetak_perbulan($tglwal, $tglakhir)
-    // {
-    //     // Total pemasukan sebelum tanggal awal
-    //     $totalPemasukanSebelum = PemasukanKasMasjid::where('tanggal_pemasukan', '<', $tglwal)
-    //         ->sum('jumlah_pemasukan');
-
-    //     // Total pemasukan dalam rentang tanggal yang diberikan
-    //     $totalPemasukan = PemasukanKasMasjid::whereBetween('tanggal_pemasukan', [$tglwal, $tglakhir])
-    //         ->sum('jumlah_pemasukan');
-
-    //     $pemasukan = PemasukanKasMasjid::whereBetween('tanggal_pemasukan', [$tglwal, $tglakhir])->get();
-    //     return view('dashboard.laporan.pemasukan.cetak_perbulan', compact('pemasukan', 'totalPemasukan', 'tglwal', 'tglakhir', 'totalPemasukanSebelum'));
-    // }
-
-    public function cetak_pertanggal($tglwal, $tglakhir)
+    public function filter_pemasukan($tglawal, $tglakhir)
     {
         // Total pemasukan sebelum tanggal awal
-        $totalPemasukanSebelum = PemasukanKasMasjid::where('tanggal_pemasukan', '<', $tglwal)
+        $totalPemasukanSebelum = PemasukanKasMasjid::where('tanggal_pemasukan', '<', $tglawal)
             ->sum('jumlah_pemasukan');
 
-        // Total pemasukan dalam rentang tanggal yang diberikan
-        $totalPemasukan = PemasukanKasMasjid::whereBetween('tanggal_pemasukan', [$tglwal, $tglakhir])
-            ->sum('jumlah_pemasukan');
-
-        $pemasukan = PemasukanKasMasjid::whereBetween('tanggal_pemasukan', [$tglwal, $tglakhir])->get();
-
-        // Buat objek Dompdf
-        $dompdf = new Dompdf();
+        $pemasukan = PemasukanKasMasjid::whereBetween('tanggal_pemasukan', [$tglawal, $tglakhir])->get();
 
         // Load view PDF dan berikan data yang diperlukan
-        $html = view('dashboard.laporan.pemasukan.cetak_perbulan', compact('pemasukan', 'totalPemasukan', 'tglwal', 'tglakhir', 'totalPemasukanSebelum'))->render();
+        $pdf =  PDF::loadView('dashboard.laporan.pemasukan.cetak_perbulan', [
+            "pemasukan" => $pemasukan,
+            "tglwal" => $tglawal,
+            "tglakhir" => $tglakhir,
+            "total" => $totalPemasukanSebelum
+        ])->setPaper("a4", "portrait");
 
-        // Konversi view HTML menjadi PDF
-        $dompdf->loadHtml($html);
-        $dompdf->setPaper('A4', 'portrait');
-        $dompdf->render();
-
+        return $pdf->download("laporan_pemasukan_" . \Carbon\Carbon::parse($tglawal)->format('d-m-Y') . '_' . \Carbon\Carbon::parse($tglakhir)->format('d-m-Y') . '.pdf');
         // Generate nama file PDF
-        $filename = 'laporan_pemasukan_pertanggal' . '.pdf';
-
-        // Mengirimkan hasil PDF sebagai respons file download
-        return $dompdf->stream($filename);
     }
 
-    public function filter_pemasukan(Request $request)
+    public function pemasukan(Request $request)
     {
         $tglawal = $request->input('tglawal');
         $tglakhir = $request->input('tglakhir');
@@ -229,16 +186,10 @@ class DashboardPemasukanController extends Controller
 
         $totalPemasukan = PemasukanKasMasjid::whereBetween('tanggal_pemasukan', [$tglawal, $tglakhir])->sum('jumlah_pemasukan');
 
-        return view('dashboard.laporan.pemasukan.index', compact('pemasukanKas', 'totalPemasukan'));
+        return redirect("/laporan-pemasukan")->withInput()->with([
+            "tglawal" => $tglawal,
+            "tglakhir" => $tglakhir,
+            "pemasukanKas" => $pemasukanKas
+        ]);
     }
-    // public function filter(Request $request)
-    // {
-    //     $tglawal = $request->tglawal;
-    //     $tglakhir = $request->tglakhir;
-
-    //     $pemasukanKas = PemasukanKasMasjid::whereBetween('created_at', '>=', $tglawal)
-    //         ->whereDate('created_at', '<=', $tglakhir)
-    //         ->get();
-    //     return view('dashboard.laporan.pemasukan.index', compact('pemasukanKas'));
-    // }
 }

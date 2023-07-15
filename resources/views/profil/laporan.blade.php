@@ -1,40 +1,103 @@
 @extends('layouts.main')
 @section('title', 'Home')
 @section('content')
-
-    <div class="our-featues-area inc-trending-courses about-area default-padding">
+    <style>
+        table,
+        th,
+        td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            padding: 5px;
+            text-align: center
+        }
+    </style>
+    <section id="event" class="event-area carousel-shadow single-view default-padding">
         <div class="container">
-            <div class="card" style="box-shadow: 5px 5px 50px 5px lightblue;">
-                <div class="card-body" style="padding: 20px">
-                    <table id="datatable" style="width: 100%;" class="table table-striped table-bordered">
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Uraian Pemasukan</th>
-                                <th>Tanggal Pemasukan</th>
-                                <th>Pemasukan</th>
-                                <th>Uraian Pengeluaran</th>
-                                <th>Pengeluaran</th>
-                                <th>Tanggal Pengeluaran</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {{-- @forelse ($kas_masjid as $item)
-                                <tr>
-                                    <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $item->tanggal_pemasukan }}</td>
-                                    <td>{{ $item->keterangan_pemasukan }}</td>
-                                    <td>{{ 'Rp ' . number_format($item->jumlah_pemasukan, 0, ',', '.') }}</td>
-                                @empty
-                                <tr>
-                                    <td colspan="4" class="text-center">Tidak ada data</td>
+            <div class="row">
+                <div class="site-heading text-center">
+                    <div class="col-md-8 col-md-offset-2">
+                        <h2>Laporan Kas Masjid</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="container mt-5">
+                <div class="card">
+                    <div class="table-responsive px-3 py-3">
+                        <table style="width:100%">
+                            <thead>
+                                <tr style="background-color: aliceblue">
+                                    <th>No</th>
+                                    <th>Uraian Pemasukan</th>
+                                    <th>Jumlah Pemasukan</th>
+                                    <th>Tanggal Pemasukan</th>
+                                    <th>Uraian Pengeluaran</th>
+                                    <th>Jumlah Pengeluaran</th>
+                                    <th>Tanggal Pengeluaran</th>
                                 </tr>
-                            @endforelse --}}
+                            </thead>
+                            <tbody>
+                                @foreach ($rekap_kas as $item)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>
+                                            {{ $item->pemasukan ? $item->pemasukan->keterangan_pemasukan : '-' }}
+                                        </td>
+                                        <td>
+                                            @if ($item->pemasukan)
+                                                {{ 'Rp ' . number_format($item->pemasukan->jumlah_pemasukan, 0, ',', '.') }}
+                                            @else
+                                                <p class="text-muted">-</p>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($item->pemasukan)
+                                                {{ \Carbon\Carbon::parse($item->pemasukan['tanggal_pemasukan'])->format('d-m-Y') }}
+                                            @else
+                                                <p class="text-muted">-</p>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($item->pengeluaran)
+                                                {{ $item->pengeluaran->keterangan_pengeluaran }}
+                                            @else
+                                                <p class="text-muted">-</p>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($item->pengeluaran)
+                                                {{ 'Rp ' . number_format($item->pengeluaran->jumlah_pengeluaran, 0, ',', '.') }}
+                                            @else
+                                                <p class="text-muted">-</p>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if ($item->pengeluaran)
+                                                {{ \Carbon\Carbon::parse($item->pengeluaran['tanggal_pengeluaran'])->format('d-m-Y') }}
+                                            @else
+                                                <p class="text-muted">-</p>
+                                            @endif
+                                        </td>
 
-                        </tbody>
-                    </table>
+                                    </tr>
+                                @endforeach
+                                <tr>
+                                    <th colspan="7">Total Pemasukan :
+                                        {{ 'Rp ' . number_format($total_pemasukan, 0, ',', '.') }}</th>
+                                </tr>
+                                <tr>
+                                    <th colspan="7">Total Pengeluaran :
+                                        {{ 'Rp ' . number_format($total_pengeluaran, 0, ',', '.') }}</th>
+                                </tr>
+                                <tr>
+                                    <th colspan="7">Saldo :
+                                        {{ 'Rp ' . number_format($total_keseluruhan, 0, ',', '.') }}
+                                    </th>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 @endsection

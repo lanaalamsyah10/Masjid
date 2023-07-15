@@ -16,12 +16,10 @@ return new class extends Migration
         Schema::create('zakat_fitrah', function (Blueprint $table) {
             $table->id();
             $table->string('nama');
-            $table->string('alamat');
+            $table->string('alamat')->nullable();
             $table->string('tanggal');
-            $table->integer('jumlah_beras')->nullable(); // Add this line
-            $table->integer('jumlah_uang')->nullable(); // Add this line
-            // $table->foreignId('kode_jenis_zakat');
-            // $table->foreignId('kode_isi_zakat')->nullable();
+            $table->double('jumlah_beras', 12, 2)->nullable(); // Add this line
+            $table->decimal('jumlah_uang', 12, 2)->nullable(); // Add this line
             $table->timestamps();
         });
     }

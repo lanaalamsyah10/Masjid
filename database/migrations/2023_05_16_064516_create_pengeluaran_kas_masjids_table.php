@@ -15,9 +15,6 @@ return new class extends Migration
     {
         Schema::create('pengeluaran_kas_masjids', function (Blueprint $table) {
             $table->id();
-
-            //  $table->foreignId('pemasukan_id')->nullable()->constrained('pemasukan_kas_masjids')->nullOnDelete();
-
             $table->string('keterangan_pengeluaran');
             $table->decimal('jumlah_pengeluaran', 12, 2);
             $table->string('tanggal_pengeluaran');

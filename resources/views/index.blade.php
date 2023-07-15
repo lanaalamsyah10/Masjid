@@ -2,10 +2,9 @@
 @section('title', 'Home')
 @section('content')
     <!-- Start Banner
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ============================================= -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ============================================= -->
     <div class="banner-area content-top-heading less-paragraph text-normal">
         <div id="bootcarousel" class="carousel slide animate_text carousel-fade" data-ride="carousel">
-
             <!-- Wrapper for slides -->
             <div class="carousel-inner text-light carousel-zoom">
                 <div class="item active">
@@ -72,7 +71,7 @@
             </div>
         </div>
     </div>
-    <section id="event" class="event-area bg-gray carousel-shadow single-view default-padding">
+    <section id="event" class="event-area carousel-shadow single-view">
         <div class="container">
             <div class="row">
                 <div class="site-heading text-center">

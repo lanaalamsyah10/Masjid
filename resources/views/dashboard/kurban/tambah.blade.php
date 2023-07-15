@@ -31,7 +31,7 @@
                                 <label>Hewan Kurban</label>
                                 <div>
                                     <select class="form-control  @error('hewan_kurban') is-invalid @enderror"
-                                        name="hewan_kurban" id="hewan_kurban" required>
+                                        name="hewan_kurban" id="hewan_kurban" value="{{ old('hewan_kurban') }}" required>
                                         <option>Sapi</option>
                                         <option>Kambing</option>
                                     </select>
@@ -44,36 +44,49 @@
                             </div>
                             <div class="form-group">
                                 <label>Jumlah Kurban</label>
-                                <input type="text" class="form-control  @error('jumlah') is-invalid @enderror"
-                                    name="jumlah" id="jumlah" placeholder="jumlah...">
+                                <input type="text"
+                                    class="form-control input-jumlah @error('jumlah') is-invalid @enderror" name="jumlah"
+                                    id="input-jumlah" value="{{ old('jumlah') }}" placeholder="jumlah...">
                                 @error('jumlah')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     @enderror
                                 </div>
                                 <div class="form-group">
-                                    <label>Tanggal</label>
-                                    <input class="form-control  @error('tanggal_masuk') is-invalid @enderror" type="date"
-                                        name="tanggal_masuk" id="tanggal_masuk">
-                                    @error('tanggal_masuk')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        @enderror
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div>
-                                            <button type="submit" class="btn btn-primary waves-effect waves-light"
-                                                onclick="disableButton2(this);">
-                                                <span id="buttonText">Simpan</span>
-                                            </button>
-
-                                            <a href="javascript:window.history.go(-1)"
-                                                class="btn btn-secondary waves-effect m-l-5">
-                                                Batal
-                                            </a>
+                                    <label>Permintaan</label>
+                                    <div>
+                                        <input type="text" class="form-control @error('permintaan') is-invalid @enderror"
+                                            id="permintaan" name="permintaan"required autofocus
+                                            value="{{ old('permintaan') }}" placeholder="Permintaan..." />
+                                        @error('permintaan')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            @enderror
                                         </div>
                                     </div>
+                                    <div class="form-group">
+                                        <label>Tanggal</label>
+                                        <input class="form-control  @error('tanggal_masuk') is-invalid @enderror"
+                                            type="date" name="tanggal_masuk" id="tanggal_masuk"
+                                            value="{{ old('tanggal') }}">
+                                        @error('tanggal_masuk')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            @enderror
+                                        </div>
+                                        <div class="form-group">
+                                            <div>
+                                                <button type="submit" class="btn btn-primary waves-effect waves-light"
+                                                    onclick="disableButton2(this);">
+                                                    <span id="buttonText">Simpan</span>
+                                                </button>
+
+                                                <a href="javascript:window.history.go(-1)"
+                                                    class="btn btn-secondary waves-effect m-l-5">
+                                                    Batal
+                                                </a>
+                                            </div>
+                                        </div>
                     </form>
 
                 </div>

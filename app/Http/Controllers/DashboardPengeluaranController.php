@@ -21,7 +21,7 @@ class DashboardPengeluaranController extends Controller
     {
         $data = [
             "total_pengeluaran" => PengeluaranKasMasjid::sum('jumlah_pengeluaran'),
-            "pengeluaran_kas" => PengeluaranKasMasjid::get()
+            "pengeluaran_kas" => PengeluaranKasMasjid::orderBy('created_at', 'desc')->get()
         ];
 
         return view('dashboard.laporan.pengeluaran.index', $data);
@@ -105,16 +105,13 @@ class DashboardPengeluaranController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate(
-            $request,
+        $request->validate(
             [
-                // 'pemasukan_id' => 'nullable',
                 'tanggal_pengeluaran' => 'required',
                 'keterangan_pengeluaran' => 'required',
                 'jumlah_pengeluaran' => 'required',
             ],
             [
-                // 'pemasukan_id.nullable' => 'Pemasukan Kas tidak boleh kosong',
                 'tanggal_pengeluaran.required' => 'Tanggal tidak boleh kosong',
                 'keterangan_pengeluaran.required' => 'Keterangan tidak boleh kosong',
                 'jumlah_pengeluaran.required' => 'Jumlah tidak boleh kosong',
@@ -124,7 +121,6 @@ class DashboardPengeluaranController extends Controller
         $pengeluaran = PengeluaranKasMasjid::findOrFail($id);
 
         $pengeluaran->update([
-            // 'pemasukan_id' => $request->pemasukan_id, // 'nullable
             'tanggal_pengeluaran' => $request->tanggal_pengeluaran,
             'keterangan_pengeluaran' => $request->keterangan_pengeluaran,
             'jumlah_pengeluaran' => $request->jumlah_pengeluaran,
@@ -139,50 +135,50 @@ class DashboardPengeluaranController extends Controller
      * @param  \App\Models\PengeluaranKasMasjid  $pengeluaranKasMasjid
      * @return \Illuminate\Http\Response
      */
+
     public function destroy($id)
     {
-        // $pengeluaran = PengeluaranKasMasjid::find($id);
-
-        // if (!$pengeluaran) {
-        //     return back()->with('error', 'Data tidak ditemukan');
-        // }
-
-        // $pengeluaran->delete();
-
-        // Rekap::where('id_pengeluaran', $id)->delete();
-
-        // return back()->with('success', 'Data Berhasil Dihapus');
         $pengeluaran = PengeluaranKasMasjid::findOrFail($id);
         $pengeluaran->delete();
 
+        $rekap = Rekap::where('id_pengeluaran', $id)->first();
+
+        if ($rekap) {
+            $rekap->delete();
+        }
+
         return back()->with('success', 'Data Berhasil Dihapus');
     }
-
     public function cetak_pdf()
     {
         $pengeluaran = PengeluaranKasMasjid::all();
-
-        $pdf = PDF::loadview('dashboard.laporan.pengeluaran.cetak', ['pengeluaran' => $pengeluaran]);
-        return $pdf->download('laporan-pengeluaran-pdf.pdf');
+        $total_pengeluaran = PengeluaranKasMasjid::sum('jumlah_pengeluaran');
+        $pdf = PDF::loadview('dashboard.laporan.pengeluaran.cetak', [
+            'pengeluaran' => $pengeluaran,
+            'total_pengeluaran' => $total_pengeluaran
+        ]);
+        return $pdf->download('laporan-pengeluaran-kas.pdf');
     }
 
-    public function cetak_perbulan($tglwal, $tglakhir)
+    //cetak pertanggal
+    public function filter_pengeluaran($tglawal, $tglakhir)
     {
         // Total pengeluaran sebelum tanggal awal
-        $total_pengeluaranSebelum = PengeluaranKasMasjid::where('tanggal_pengeluaran', '<', $tglwal)
+        $totalPengeluaranSebelum = PengeluaranKasMasjid::where('tanggal_pengeluaran', '<', $tglawal)
             ->sum('jumlah_pengeluaran');
 
-        // Total pengeluaran dalam rentang tanggal yang diberikan
-        $total_pengeluaran = PengeluaranKasMasjid::whereBetween('tanggal_pengeluaran', [$tglwal, $tglakhir])
-            ->sum('jumlah_pengeluaran');
-
-        $pengeluaran_kas = PengeluaranKasMasjid::whereBetween('tanggal_pengeluaran', [$tglwal, $tglakhir])->get();
+        $pengeluaran = PengeluaranKasMasjid::whereBetween('tanggal_pengeluaran', [$tglawal, $tglakhir])->get();
 
         // Buat objek Dompdf
         $dompdf = new Dompdf();
 
         // Load view PDF dan berikan data yang diperlukan
-        $html = view('dashboard.laporan.pengeluaran.cetak_perbulan', compact('pengeluaran_kas', 'total_pengeluaran', 'tglwal', 'tglakhir', 'total_pengeluaranSebelum'))->render();
+        $html = view('dashboard.laporan.pengeluaran.cetak_perbulan', [
+            "pengeluaran" => $pengeluaran,
+            "tglwal" => $tglawal,
+            "tglakhir" => $tglakhir,
+            "total" => $totalPengeluaranSebelum
+        ]);
 
         // Konversi view HTML menjadi PDF
         $dompdf->loadHtml($html);
@@ -190,21 +186,25 @@ class DashboardPengeluaranController extends Controller
         $dompdf->render();
 
         // Generate nama file PDF
-        $filename = 'laporan_pengeluran_pertanggal' . '.pdf';
+        $filename = 'laporan_pengeluran_' . \Carbon\Carbon::parse($tglawal)->format('d-m-Y') . '_' . \Carbon\Carbon::parse($tglakhir)->format('d-m-Y') . '.pdf';
 
         // Mengirimkan hasil PDF sebagai respons file download
         return $dompdf->stream($filename);
     }
 
-    public function filter(Request $request)
+    public function pengeluaran(Request $request)
     {
         $tglawal = $request->input('tglawal');
         $tglakhir = $request->input('tglakhir');
 
-        $pengeluaran_kas = PengeluaranKasMasjid::whereBetween('tanggal_pengeluaran', [$tglawal, $tglakhir])->get();
+        $pengeluaranKas = PengeluaranKasMasjid::whereBetween('tanggal_pengeluaran', [$tglawal, $tglakhir])->get();
 
-        $total_pengeluaran = PengeluaranKasMasjid::whereBetween('tanggal_pengeluaran', [$tglawal, $tglakhir])->sum('jumlah_pengeluaran');
+        $totalPengeluaran = PengeluaranKasMasjid::whereBetween('tanggal_pengeluaran', [$tglawal, $tglakhir])->sum('jumlah_pengeluaran');
 
-        return view('dashboard.laporan.pengeluaran.index', compact('pengeluaran_kas', 'total_pengeluaran'));
+        return redirect("/laporan-pengeluaran")->withInput()->with([
+            "tglawal" => $tglawal,
+            "tglakhir" => $tglakhir,
+            "pengeluaranKas" => $pengeluaranKas
+        ]);
     }
 }

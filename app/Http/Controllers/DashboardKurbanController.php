@@ -12,16 +12,39 @@ class DashboardKurbanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
     public function index()
     {
-        // $totalPemasukan = Kurban::sum('jumlah_pemasukan');
+        $kurban = Kurban::orderBy('created_at', 'desc')->get();
+        $data = Kurban::all();
 
-        $kurban = Kurban::get();
+        $totalSapi = 0;
+        $totalKambing = 0;
 
-        return view('dashboard.kurban.index', [
-            'kurban' => $kurban,
-        ]);
+        foreach ($data as $row) {
+            if ($row->hewan_kurban === 'Sapi') {
+                $totalSapi += $row->jumlah;
+            } elseif ($row->hewan_kurban === 'Kambing') {
+                $totalKambing += $row->jumlah;
+            }
+        }
+        // $totalSapi = Kurban::where('hewan_kurban', 'sapi')->count();
+        // $totalKambing = Kurban::where('hewan_kurban', 'kambing')->count();
+        $totalKurban = $kurban->sum('jumlah');
+
+        return view('dashboard.kurban.index', compact('kurban', 'totalSapi', 'totalKambing', 'totalKurban'));
     }
+
+    // public function index()
+    // {
+    //     // $totalPemasukan = Kurban::sum('jumlah_pemasukan');
+
+    //     $kurban = Kurban::get();
+
+    //     return view('dashboard.kurban.index', [
+    //         'kurban' => $kurban,
+    //     ]);
+    // }
 
     /**
      * Show the form for creating a new resource.
@@ -48,12 +71,14 @@ class DashboardKurbanController extends Controller
                 'hewan_kurban' => 'required',
                 'jumlah' => 'required',
                 'tanggal_masuk' => 'required',
+                'permintaan' => 'required',
             ],
             [
                 'nama.required' => 'Nama tidak boleh kosong',
                 'hewan_kurban.required' => 'Kurban tidak boleh kosong',
                 'jumlah.required' => 'Jumlah Kurban tidak boleh kosong',
                 'tanggal_masuk.required' => 'Tanggal tidak boleh kosong',
+                'permintaan.required' => 'Permintaan tidak boleh kosong',
             ]
         );
 
@@ -62,6 +87,7 @@ class DashboardKurbanController extends Controller
             'hewan_kurban' => $request->hewan_kurban,
             'jumlah' => $request->jumlah,
             'tanggal_masuk' => $request->tanggal_masuk,
+            'permintaan' => $request->permintaan,
         ]);
 
         return redirect()->route('dashboard.kurban.index')->with('success', 'Data Berhasil Ditambahkan');
@@ -107,12 +133,14 @@ class DashboardKurbanController extends Controller
                 'hewan_kurban' => 'required',
                 'jumlah' => 'required',
                 'tanggal_masuk' => 'required',
+                'permintaan' => 'required',
             ],
             [
                 'nama.required' => 'Nama tidak boleh kosong',
                 'hewan_kurban.required' => 'Kurban tidak boleh kosong',
                 'jumlah.required' => 'Jumlah Kurban tidak boleh kosong',
                 'tanggal_masuk.required' => 'Tanggal tidak boleh kosong',
+                'permintaan.required' => 'Permintaan tidak boleh kosong',
             ]
         );
         $kurban = Kurban::findOrFail($id);
@@ -122,6 +150,7 @@ class DashboardKurbanController extends Controller
             'hewan_kurban' => $request->hewan_kurban,
             'jumlah' => $request->jumlah,
             'tanggal_masuk' => $request->tanggal_masuk,
+            'permintaan' => $request->permintaan,
         ]);
 
         return redirect()->route('dashboard.kurban.index')->with('success', 'Data Berhasil Ditambahkan');

@@ -3,14 +3,7 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="page-title-box">
-                <div class="btn-group float-right">
-                    <ol class="breadcrumb hide-phone p-0 m-0">
-                        <li class="breadcrumb-item"><a href="#">Annex</a></li>
-                        <li class="breadcrumb-item"><a href="#">Tables</a></li>
-                        <li class="breadcrumb-item active">Datatable</li>
-                    </ol>
-                </div>
-                <h4 class="page-title">Saran & Masukan</h4>
+                <h4 class="btn-group float-left">Saran Masjid</h4>
             </div>
         </div>
     </div>
@@ -23,39 +16,35 @@
                         <table id="datatable" class="table">
                             <thead>
                                 <tr>
+                                    <th>No</th>
                                     <th>Nama</th>
-                                    <th>Saran</th>
                                     <th>Email</th>
+                                    <th>No telepon</th>
+                                    <th>Saran</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>Tiger Nixon</td>
-                                    <td>System Architect</td>
-                                    <td>Edinburgh</td>
-                                    <td>
-                                        <div class="button-items">
-                                            <a class="btn btn-warning" href="{{ route('pengurus-edit') }}" role="button"><i
-                                                    class="mdi mdi-eye"></i></a>
-                                            <button type="button" class="btn btn-danger" id="sa-params"><i
-                                                    class="mdi mdi-delete"></i></button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Garrett Winters</td>
-                                    <td>Accountant</td>
-                                    <td>Tokyo</td>
-                                    <td>
-                                        <div class="button-items">
-                                            <a class="btn btn-warning" href="{{ route('pengurus-edit') }}" role="button"><i
-                                                    class="mdi mdi-eye"></i></a>
-                                            <button type="button" class="btn btn-danger" id="sa-params"><i
-                                                    class="mdi mdi-delete"></i></button>
-                                        </div>
-                                    </td>
-                                </tr>
+                                @foreach ($saran as $item)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $item->nama }}</td>
+                                        <td>{{ $item->email }}</td>
+                                        <td>{{ $item->no_hp }}</td>
+                                        <td>{{ $item->saran }}</td>
+                                        <td>
+                                            <div class=" d-flex button-items">
+                                                <form action="{{ route('dashboard.saran.destroy', $item->id) }}"
+                                                    method="POST" onsubmit="return deleteConfirmation(event)">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger"><i
+                                                            class="mdi mdi-delete"></i></button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>

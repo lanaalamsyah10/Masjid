@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="page-title-box">
-                <h4 class="btn-group float-left">Tambah Pemasukan</h4>
+                <h4 class="btn-group float-left">Edit Kurban</h4>
             </div>
         </div>
     </div>
@@ -53,28 +53,40 @@
                                     @enderror
                                 </div>
                                 <div class="form-group">
-                                    <label>Tanggal</label>
-                                    <input class="form-control  @error('tanggal_masuk') is-invalid @enderror" type="date"
-                                        name="tanggal_masuk" id="tanggal_masuk" value="{{ $kurban->tanggal_masuk }}">
-                                    @error('tanggal_masuk')
-                                        <div class="invalid-feedback">~
-                                            {{ $message }}
-                                        @enderror
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div>
-                                            <button type="submit" class="btn btn-primary waves-effect waves-light"
-                                                onclick="disableButton2(this);">
-                                                <span id="buttonText">Simpan</span>
-                                            </button>
-
-                                            <a href="javascript:window.history.go(-1)"
-                                                class="btn btn-secondary waves-effect m-l-5">
-                                                Batal
-                                            </a>
+                                    <label>Permintaan</label>
+                                    <div>
+                                        <input type="text" class="form-control @error('permintaan') is-invalid @enderror"
+                                            id="permintaan" name="permintaan"required autofocus
+                                            value="{{ $kurban->permintaan }}" />
+                                        @error('permintaan')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            @enderror
                                         </div>
                                     </div>
+                                    <div class="form-group">
+                                        <label>Tanggal</label>
+                                        <input class="form-control  @error('tanggal_masuk') is-invalid @enderror"
+                                            type="date" name="tanggal_masuk" id="tanggal_masuk"
+                                            value="{{ $kurban->tanggal_masuk }}">
+                                        @error('tanggal_masuk')
+                                            <div class="invalid-feedback">~
+                                                {{ $message }}
+                                            @enderror
+                                        </div>
+                                        <div class="form-group">
+                                            <div>
+                                                <button type="submit" class="btn btn-primary waves-effect waves-light"
+                                                    onclick="disableButton3(this);">
+                                                    <span id="buttonText">Simpan</span>
+                                                </button>
+
+                                                <a href="javascript:window.history.go(-1)"
+                                                    class="btn btn-secondary waves-effect m-l-5">
+                                                    Batal
+                                                </a>
+                                            </div>
+                                        </div>
                     </form>
 
                 </div>

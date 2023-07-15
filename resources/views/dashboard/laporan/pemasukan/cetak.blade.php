@@ -54,11 +54,6 @@
             </tr>
         </thead>
         <tbody>
-            {{-- <tr>
-                <td></td>
-                <td>Saldo bulan april</td>
-                <th colspan="2">{{ 'Rp ' . number_format($totalPemasukan, 0, ',', '.') }}</th>
-            </tr> --}}
             @foreach ($pemasukan as $data)
                 <tr>
                     <td>{{ $loop->iteration }}</td>

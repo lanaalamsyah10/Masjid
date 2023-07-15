@@ -13,7 +13,8 @@
         <div class="col-lg-12">
             <div class="card m-b-30">
                 <div class="card-body">
-                    <form action="{{ url('zakat-zakat_mustahik') }}" method="post" enctype="multipart/form-data">
+                    <form action="{{ route('dashboard.zakat-zakat_mustahik.store') }}" method="post"
+                        enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
                             <label>Nama</label>
@@ -30,7 +31,7 @@
                             <div class="form-group">
                                 <label>Alamat</label>
                                 <input type="text" class="form-control  @error('alamat') is-invalid @enderror"
-                                    name="alamat" id="alamat" placeholder="alamat...">
+                                    name="alamat" id="alamat" placeholder="alamat..." value="{{ old('alamat') }}">
                                 @error('alamat')
                                     <div class="invalid-feedback">
                                         {{ $message }}

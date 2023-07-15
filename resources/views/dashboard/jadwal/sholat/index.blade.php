@@ -3,7 +3,7 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="page-title-box">
-                <h4 class="btn-group float-left">Jadwal Imam Sholat</h4>
+                <h4 class="btn-group float-left">Jadwal Imam</h4>
             </div>
         </div>
     </div>
@@ -44,9 +44,6 @@
                                                     <button type="submit" class="btn btn-danger"><i
                                                             class="mdi mdi-delete"></i></button>
                                                 </form>
-                                                {{-- <button type="button" class="btn btn-danger" id="sa-params"
-                                                    value="{{ route('dashboard.jadwal-sholat.destroy', $item->id) }}"><i
-                                                        class="mdi mdi-delete"></i></button> --}}
                                             </div>
                                         </td>
                                     </tr>

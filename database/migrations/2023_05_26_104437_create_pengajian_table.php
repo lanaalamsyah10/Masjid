@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('hari');
             $table->string('pemateri');
+            $table->string('materi');
             $table->string('waktu');
             $table->timestamps();
         });

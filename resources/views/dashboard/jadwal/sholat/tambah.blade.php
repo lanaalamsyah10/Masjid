@@ -36,7 +36,7 @@
                         <div class="form-group">
                             <label>Nama Imam</label>
                             <input type="text" class="form-control  @error('imam') is-invalid @enderror" name="imam"
-                                id="imam" placeholder="nama...">
+                                id="imam" value="{{ old('imam') }}" placeholder="nama...">
                             @error('imam')
                                 <div class="invalid-feedback">
                                     {{ $message }}

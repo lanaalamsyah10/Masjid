@@ -22,8 +22,6 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="sweetalert2.all.min.js"></script>
 <script src="sweetalert2.min.js"></script>
-{{-- <script src="assets/plugins/sweet-alert2/sweetalert2.min.js"></script> --}}
-{{-- <script src="assets/pages/sweet-alert.init.js"></script> --}}
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap4.min.js"></script>
@@ -43,8 +41,8 @@
             event.preventDefault();
 
             Swal.fire({
-                title: 'Apakah Anda yakin?',
-                text: "Data ini akan dihapus!",
+                title: 'Hapus data?',
+                text: "Data yang telah dihapus tidak dapat dikembalikan!",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -66,47 +64,6 @@
             });
         }
     </script>
-    {{-- <script>
-        $(function() {
-            $(document).on('clik', '#delete', function(e) {
-                e.preventDefault();
-                var link = $(this).attr("href");
-
-            });
-        });
-    </script> --}}
-    {{-- <script type="text/javascript">
-        $(function() {
-            $(document).on('click', '#delete', function(e) {
-                e.preventDefault();
-                var link = $(this).attr("href");
-
-
-                swal({
-                    title: 'Are you sure?',
-                    text: "You won't be able to revert this!",
-                    type: 'warning',
-                    showCancelButton: true,
-                    confirmButtonClass: 'btn btn-success',
-                    cancelButtonClass: 'btn btn-danger m-l-10',
-                    confirmButtonText: 'Yes, delete it!'
-                }).then(function(success) {
-                    var route = $('#delete').val();
-                    if (success) {
-                        setTimeout(() => {
-                            window.location.href = route;
-                        }, 700);
-                    }
-                    swal(
-                        'Deleted!',
-                        'Your file has been deleted.',
-                        'success'
-                    )
-                })
-
-            });
-        });
-    </script> --}}
     <script>
         function disableButton(button) {
             button.disabled = true;
@@ -125,14 +82,28 @@
         }
     </script>
     <script>
-        jQuery(document).ready(function() {
-            $('.summernote').summernote({
-                height: 300, // set editor height
-                minHeight: null, // set minimum height of editor
-                maxHeight: null, // set maximum height of editor
-                focus: true // set focus to editable area after initializing summernote
-            });
-        });
+        function disableButton1(button) {
+            button.disabled = true;
+            var buttonText = document.getElementById("buttonText");
+            buttonText.innerText = "Tunggu...";
+
+            // Mengganti format angka sebelum submit
+            var inputHarga = document.getElementById('input-harga');
+            var nilaiInput = inputHarga.value.replace(/\D/g, '');
+            inputHarga.value = nilaiInput;
+
+            // Menjalankan submit form setelah 500ms
+            setTimeout(function() {
+                button.form.submit();
+            }, 500);
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: 'Data berhasil diubah',
+                showConfirmButton: false,
+                timer: 1500
+            })
+        }
     </script>
 
     <script>
@@ -141,18 +112,38 @@
             var buttonText = document.getElementById("buttonText");
             buttonText.innerText = "Tunggu...";
 
-            // Mengganti format angka sebelum submit
-            // var inputHarga = document.getElementById('input-harga');
-            // var nilaiInput = inputHarga.value.replace(/\D/g, '');
-            // inputHarga.value = nilaiInput;
+            // Menjalankan submit form setelah 500ms
+            setTimeout(function() {
+                button.form.submit();
+            }, 500);
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: 'Data berhasil ditambahkan',
+                showConfirmButton: false,
+                timer: 1500
+            })
+        }
+    </script>
+    <script>
+        function disableButton3(button) {
+            button.disabled = true;
+            var buttonText = document.getElementById("buttonText");
+            buttonText.innerText = "Tunggu...";
 
             // Menjalankan submit form setelah 500ms
             setTimeout(function() {
                 button.form.submit();
             }, 500);
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: 'Data berhasil diubah',
+                showConfirmButton: false,
+                timer: 1500
+            })
         }
     </script>
-
     <script>
         function formatRupiah(angka) {
             var rupiah = '';
@@ -179,42 +170,20 @@
 @endpush
 
 <script>
-    $('#sa-params').click(function() {
-        swal({
-            title: 'Hapus data anda?',
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Ya, Hapus',
-            cancelButtonText: 'Tidak !',
-            confirmButtonClass: 'btn btn-success',
-            cancelButtonClass: 'btn btn-danger m-l-10',
-            buttonsStyling: false
-        }).then(function(success) {
-            var route = $('#sa-params').val();
-            if (success) {
-                setTimeout(() => {
-                    window.location.href = route;
-                }, 700);
-            }
-            swal(
-                'Berhasil dihapus!',
-                '',
-                'success'
-            )
-        }, function(dismiss) {
-            // dismiss can be 'cancel', 'overlay',
-            // 'close', and 'timer'
-            if (dismiss === 'cancel') {
-                swal(
-                    'Dibatalkan',
-                    '',
-                    'error'
-                )
-            }
-        })
+    $(document).ready(function() {
+        // Mendapatkan input dengan id "input-jumlah"
+        var inputJumlah = $("#input-jumlah");
+
+        // Menambahkan event listener untuk mengformat input saat pengguna mengetik
+        inputJumlah.on("input", function() {
+            // Menghapus karakter selain angka dari nilai input
+            var value = inputJumlah.val().replace(/[^0-9]/g, "");
+
+            // Mengubah nilai input menjadi format angka dengan ribuan (misalnya: 1,000,000)
+            inputJumlah.val(new Intl.NumberFormat().format(value));
+        });
     });
 </script>
-
 <script>
     $(document).ready(function() {
         $('#datatable').DataTable();

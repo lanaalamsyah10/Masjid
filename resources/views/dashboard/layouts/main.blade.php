@@ -37,7 +37,6 @@
             <!-- LOGO -->
             <div class="topbar-left">
                 <div class="text-center">
-                    {{-- <a href="index.html" class="logo"><i class="mdi mdi-assistant"></i> Annex</a> --}}
                     <a href="{{ url('dashboard') }}" class="logo"><img src="{{ asset('assets/img/sss.png') }}"
                             height="20" alt="logo"></a>
                 </div>

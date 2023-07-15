@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\HalamanUtama;
 
-use App\Models\User;
+use App\Models\Rekap;
 use App\Models\Sholat;
 use App\Models\Pengurus;
 use App\Models\Pengajian;
@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\PengumumanMasjid;
 use App\Models\PemasukanKasMasjid;
 use App\Http\Controllers\Controller;
-use App\Models\PemasukanKasMasjidKasMasjid;
+use App\Models\PengeluaranKasMasjid;
 
 class LandingPageController extends Controller
 {
@@ -30,8 +30,15 @@ class LandingPageController extends Controller
 
     public function laporan()
     {
+        $total_pengeluaran = PengeluaranKasMasjid::sum('jumlah_pengeluaran');
+        $total_pemasukan = PemasukanKasMasjid::sum('jumlah_pemasukan');
+        $total_keseluruhan = $total_pemasukan - $total_pengeluaran;
         $data = [
-            "kas_masjid" => PemasukanKasMasjid::get()
+            "rekap_kas" => Rekap::orderBy('created_at', 'desc')->get(),
+            "total_keseluruhan" => $total_keseluruhan,
+            "total_pemasukan" => $total_pemasukan,
+            "total_pengeluaran" => $total_pengeluaran,
+            // "kas_masjid" => PemasukanKasMasjid::get()
         ];
 
         return view('profil.laporan', $data);
@@ -40,9 +47,6 @@ class LandingPageController extends Controller
     {
         $data = [
             "pengurus" => Pengurus::get()
-        ];
-        $data = [
-            "users" => User::get()
         ];
 
         return view('profil.pengurus', $data);
@@ -64,20 +68,15 @@ class LandingPageController extends Controller
 
         return view('jadwal.sholat', $data);
     }
-    public function pengumuman()
+    public function pengumuman(Request $request)
     {
-        $data = [
-            "pengumuman" => PengumumanMasjid::get()
-        ];
+        $search = $request->input('search');
 
+        $data = [
+            "pengumuman" => PengumumanMasjid::where('judul_pengumuman', 'LIKE', "%$search%")
+                ->orWhere('isi_pengumuman', 'LIKE', "%$search%")
+                ->get()
+        ];
         return view('pengumuman.index', $data);
-    }
-    public function kontak()
-    {
-        return view('kontak.index');
-    }
-    public function index()
-    {
-        return view('profil.index1');
     }
 }

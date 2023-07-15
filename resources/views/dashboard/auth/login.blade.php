@@ -53,8 +53,6 @@
                                 </div>
 
                             </form>
-                            {{-- <small class="d-block text-center mt-3">Belum Mendaftar? <a
-                                    href="/register">Daftar!</a></small> --}}
                         </div>
                     </div>
                 </div>

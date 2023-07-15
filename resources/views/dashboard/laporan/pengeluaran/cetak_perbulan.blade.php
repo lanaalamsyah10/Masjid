@@ -58,7 +58,13 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($pengeluaran_kas as $data)
+            @php
+                $jumlahakhir = 0;
+            @endphp
+            @foreach ($pengeluaran as $data)
+                @php
+                    $jumlahakhir += $data->jumlah_pengeluaran;
+                @endphp
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $data['keterangan_pengeluaran'] }}</td>
@@ -68,12 +74,12 @@
             @endforeach
             <tr>
                 <td colspan="3">Saldo kas sebelumnya :</td>
-                <th>{{ 'Rp ' . number_format($total_pengeluaranSebelum, 0, ',', '.') }}</th>
+                <th>{{ 'Rp ' . number_format($total, 0, ',', '.') }}</th>
             </tr>
 
             <tr>
                 <td colspan="3">Jumlah akhir :</td>
-                <th>{{ 'Rp ' . number_format($total_pengeluaran, 0, ',', '.') }}</th>
+                <th>{{ 'Rp ' . number_format($jumlahakhir, 0, ',', '.') }}</th>
             </tr>
         </tbody>
     </table>

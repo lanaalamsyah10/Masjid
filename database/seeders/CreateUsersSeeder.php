@@ -20,21 +20,15 @@ class CreateUsersSeeder extends Seeder
                 'name' => 'Admin',
                 'username' => 'Admin Dkm',
                 'email' => 'admin@admin.com',
-                'jenis_kelamin' => 'Laki-laki',
-                'no_hp' => '082123123',
-                'alamat' => 'Karangampel Kidul',
-                'role' => 0,
                 'password' => bcrypt('password'),
+                'role' => 0,
             ],
             [
                 'name' => 'Pengurus',
                 'username' => 'Pengurus Dkm',
                 'email' => 'pengurus@pengurus.com',
-                'jenis_kelamin' => 'Laki-laki',
-                'no_hp' => '082125533',
-                'alamat' => 'Karangampel',
-                'role' => 1,
                 'password' => bcrypt('password'),
+                'role' => 1,
             ],
         ];
 

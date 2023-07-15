@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Pengurus;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Hash;
 
 class DashboardPengurusController extends Controller
 {
@@ -14,7 +17,10 @@ class DashboardPengurusController extends Controller
      */
     public function index()
     {
-        //
+        $pengurus = Pengurus::orderBy('created_at', 'desc')->get();
+        return view('dashboard.pengurus.biodata_pengurus.index', [
+            'pengurus' => $pengurus,
+        ]);
     }
 
     /**
@@ -24,7 +30,7 @@ class DashboardPengurusController extends Controller
      */
     public function create()
     {
-        //
+        return view('dashboard.pengurus.biodata_pengurus.tambah');
     }
 
     /**
@@ -35,7 +41,31 @@ class DashboardPengurusController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate(
+            [
+                'name' => 'required',
+                'jabatan' => 'required',
+                'jenis_kelamin' => 'required',
+                'no_hp' => 'required',
+                'alamat' => 'required',
+            ],
+            [
+                'name.required' => 'Nama tidak boleh kosong',
+                'jabatan.required' => 'Jabatan tidak boleh kosong',
+                'jenis_kelamin.required' => 'Jenis Kelamin tidak boleh kosong',
+                'no_hp.required' => 'No HP tidak boleh kosong',
+                'alamat.required' => 'Alamat tidak boleh kosong',
+            ]
+
+        );
+        Pengurus::create([
+            'name' => $request->name,
+            'jabatan' => $request->jabatan,
+            'jenis_kelamin' => $request->jenis_kelamin,
+            'no_hp' => $request->no_hp,
+            'alamat' => $request->alamat,
+        ]);
+        return redirect()->route('dashboard.biodata-pengurus.index')->with('success', 'Data Pengurus Berhasil Ditambahkan');
     }
 
     /**
@@ -55,9 +85,11 @@ class DashboardPengurusController extends Controller
      * @param  \App\Models\Pengurus  $pengurus
      * @return \Illuminate\Http\Response
      */
-    public function edit(Pengurus $pengurus)
+    public function edit($id)
     {
-        //
+        $pengurus = Pengurus::find($id);
+
+        return view('dashboard.pengurus.biodata_pengurus.edit', compact('pengurus'));
     }
 
     /**
@@ -67,9 +99,36 @@ class DashboardPengurusController extends Controller
      * @param  \App\Models\Pengurus  $pengurus
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Pengurus $pengurus)
+    public function update(Request $request, $id)
     {
-        //
+        $this->validate(
+            $request,
+            [
+                'name' => 'required',
+                'jabatan' => 'required',
+                'jenis_kelamin' => 'required',
+                'no_hp' => 'required',
+                'alamat' => 'required',
+            ],
+            [
+                'name.required' => 'Nama tidak boleh kosong',
+                'jabatan.required' => 'Jabatan tidak boleh kosong',
+                'jenis_kelamin.required' => 'Jenis Kelamin tidak boleh kosong',
+                'no_hp.required' => 'No HP tidak boleh kosong',
+                'alamat.required' => 'Alamat tidak boleh kosong',
+            ]
+        );
+        $pengurus = Pengurus::findOrFail($id);
+
+        $pengurus->update([
+            'name' => $request->name,
+            'jabatan' => $request->jabatan,
+            'jenis_kelamin' => $request->jenis_kelamin,
+            'no_hp' => $request->no_hp,
+            'alamat' => $request->alamat,
+        ]);
+
+        return redirect()->route('dashboard.biodata-pengurus.index')->with('success', 'Data Berhasil Ditambahkan');
     }
 
     /**
@@ -78,8 +137,11 @@ class DashboardPengurusController extends Controller
      * @param  \App\Models\Pengurus  $pengurus
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Pengurus $pengurus)
+    public function destroy($id)
     {
-        //
+        $pengurus = Pengurus::findOrFail($id);
+        $pengurus->delete();
+
+        return back()->with('success', 'Data Berhasil Dihapus');
     }
 }
