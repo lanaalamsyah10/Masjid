@@ -26,7 +26,7 @@
                         <p>Jadwal Pengajian</p>
                     </a>
                     <a href="{{ route('jadwal.sholat') }}" class="text-reset">
-                        <p>Jadwal Sholat</p>
+                        <p>Jadwal Imam</p>
                     </a>
                     <a href="{{ route('profil.laporan') }}" class="text-reset">
                         <p>Laporan Kas</p>

@@ -153,11 +153,24 @@ class DashboardPengeluaranController extends Controller
     {
         $pengeluaran = PengeluaranKasMasjid::all();
         $total_pengeluaran = PengeluaranKasMasjid::sum('jumlah_pengeluaran');
-        $pdf = PDF::loadview('dashboard.laporan.pengeluaran.cetak', [
+
+        $dompdf = new Dompdf();
+
+        // Load view PDF dan berikan data yang diperlukan
+        $html = view('dashboard.laporan.pengeluaran.cetak', [
             'pengeluaran' => $pengeluaran,
             'total_pengeluaran' => $total_pengeluaran
         ]);
-        return $pdf->download('laporan-pengeluaran-kas.pdf');
+
+        // Konversi view HTML menjadi PDF
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+        // Generate nama file PDF
+        $filename = 'laporan-pengeluaran-kas' . 'pdf';
+
+        // Mengirimkan hasil PDF sebagai respons file download
+        return $dompdf->stream($filename);
     }
 
     //cetak pertanggal

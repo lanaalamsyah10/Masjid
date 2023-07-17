@@ -150,11 +150,23 @@ class DashboardPemasukanController extends Controller
         $totalPemasukan = PemasukanKasMasjid::sum('jumlah_pemasukan');
         $pemasukan = PemasukanKasMasjid::all();
 
-        $pdf = PDF::loadview('dashboard.laporan.pemasukan.cetak', [
+        $dompdf = new Dompdf();
+
+        // Load view PDF dan berikan data yang diperlukan
+        $html = view('dashboard.laporan.pemasukan.cetak', [
             'pemasukan' => $pemasukan,
             'totalPemasukan' => $totalPemasukan,
         ]);
-        return $pdf->download('laporan-pemasukan-kas.pdf');
+
+        // Konversi view HTML menjadi PDF
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+        // Generate nama file PDF
+        $filename = 'laporan-pemasukan-kas' . 'pdf';
+
+        // Mengirimkan hasil PDF sebagai respons file download
+        return $dompdf->stream($filename);
     }
 
     public function filter_pemasukan($tglawal, $tglakhir)
@@ -165,16 +177,27 @@ class DashboardPemasukanController extends Controller
 
         $pemasukan = PemasukanKasMasjid::whereBetween('tanggal_pemasukan', [$tglawal, $tglakhir])->get();
 
+        // Buat objek Dompdf
+        $dompdf = new Dompdf();
+
         // Load view PDF dan berikan data yang diperlukan
-        $pdf =  PDF::loadView('dashboard.laporan.pemasukan.cetak_perbulan', [
+        $html = view('dashboard.laporan.pemasukan.cetak_perbulan', [
             "pemasukan" => $pemasukan,
             "tglwal" => $tglawal,
             "tglakhir" => $tglakhir,
             "total" => $totalPemasukanSebelum
-        ])->setPaper("a4", "portrait");
+        ]);
 
-        return $pdf->download("laporan_pemasukan_" . \Carbon\Carbon::parse($tglawal)->format('d-m-Y') . '_' . \Carbon\Carbon::parse($tglakhir)->format('d-m-Y') . '.pdf');
+        // Konversi view HTML menjadi PDF
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+
         // Generate nama file PDF
+        $filename = 'laporan_pemasukan_' . \Carbon\Carbon::parse($tglawal)->format('d-m-Y') . '_' . \Carbon\Carbon::parse($tglakhir)->format('d-m-Y') . '.pdf';
+
+        // Mengirimkan hasil PDF sebagai respons file download
+        return $dompdf->stream($filename);
     }
 
     public function pemasukan(Request $request)
