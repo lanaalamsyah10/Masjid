@@ -126,7 +126,7 @@ class AdminController extends Controller
         $users = User::findOrFail($id);
         $users->update($userData);
 
-        return redirect()->route('dashboard.kelola-pengurus.index')->with('success', 'Data Berhasil Diupdate!');
+        return redirect()->route('dashboard.kelola-pengurus.index')->with('edit', 'Data Berhasil Diupdate!');
     }
 
 

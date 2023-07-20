@@ -28,24 +28,10 @@ class DashboardKurbanController extends Controller
                 $totalKambing += $row->jumlah;
             }
         }
-        // $totalSapi = Kurban::where('hewan_kurban', 'sapi')->count();
-        // $totalKambing = Kurban::where('hewan_kurban', 'kambing')->count();
         $totalKurban = $kurban->sum('jumlah');
 
         return view('dashboard.kurban.index', compact('kurban', 'totalSapi', 'totalKambing', 'totalKurban'));
     }
-
-    // public function index()
-    // {
-    //     // $totalPemasukan = Kurban::sum('jumlah_pemasukan');
-
-    //     $kurban = Kurban::get();
-
-    //     return view('dashboard.kurban.index', [
-    //         'kurban' => $kurban,
-    //     ]);
-    // }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -153,7 +139,7 @@ class DashboardKurbanController extends Controller
             'permintaan' => $request->permintaan,
         ]);
 
-        return redirect()->route('dashboard.kurban.index')->with('success', 'Data Berhasil Ditambahkan');
+        return redirect()->route('dashboard.kurban.index')->with('edit', 'Data Berhasil Ditambahkan');
     }
 
     /**

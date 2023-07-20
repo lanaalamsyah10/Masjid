@@ -37,7 +37,13 @@
                                         <td>{{ $user->name }}</td>
                                         <td>{{ $user->jabatan }}</td>
                                         <td>{{ $user->jenis_kelamin }}</td>
-                                        <td>{{ $user->no_hp }}</td>
+                                        <td>
+                                            @if (isset($user->no_hp))
+                                                {{ $user->no_hp }}
+                                            @else
+                                                -
+                                            @endif
+                                        </td>
                                         <td>{{ $user->alamat }}</td>
                                         <td>
                                             <div class=" d-flex button-items">

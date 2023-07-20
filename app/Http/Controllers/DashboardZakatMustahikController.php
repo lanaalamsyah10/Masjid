@@ -112,7 +112,7 @@ class DashboardZakatMustahikController extends Controller
             'alamat' => $request->alamat,
             'tanggal' => $request->tanggal,
         ]);
-        return redirect()->route('dashboard.zakat-zakat_mustahik.index')->with('success', 'Data Mustahik Berhasil Diubah');
+        return redirect()->route('dashboard.zakat-zakat_mustahik.index')->with('edit', 'Data Mustahik Berhasil Diubah');
     }
 
     /**

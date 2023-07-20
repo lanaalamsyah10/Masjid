@@ -118,7 +118,7 @@ class DashboardPemasukanController extends Controller
             'jumlah_pemasukan' => $request->jumlah_pemasukan,
         ]);
 
-        return redirect()->route('dashboard.laporan-pemasukan.index')->with('success', 'Data Berhasil Diubah');
+        return redirect()->route('dashboard.laporan-pemasukan.index')->with('edit', 'Data Berhasil Diubah');
     }
 
 
@@ -141,7 +141,7 @@ class DashboardPemasukanController extends Controller
             $rekap->delete();
         }
 
-        return back()->with('success', 'Data Berhasil Dihapus');
+        return back();
     }
 
 

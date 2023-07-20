@@ -37,6 +37,29 @@
 
 @push('javascript')
     <script>
+        @if (session('success'))
+            setTimeout(function() {
+                button.form.submit();
+            }, 500);
+            Swal.fire({
+                icon: 'success',
+                title: 'Data berhasil ditambahkan',
+                showConfirmButton: false,
+                timer: 1500
+            })
+        @elseif (session('edit'))
+            setTimeout(function() {
+                button.form.submit();
+            }, 500);
+            Swal.fire({
+                icon: 'success',
+                title: 'Data berhasil diperbarui',
+                showConfirmButton: false,
+                timer: 1500
+            })
+        @endif
+    </script>
+    <script>
         function deleteConfirmation(event) {
             event.preventDefault();
 
@@ -96,16 +119,8 @@
             setTimeout(function() {
                 button.form.submit();
             }, 500);
-            Swal.fire({
-                position: 'top-end',
-                icon: 'success',
-                title: 'Data berhasil diubah',
-                showConfirmButton: false,
-                timer: 1500
-            })
         }
     </script>
-
     <script>
         function disableButton2(button) {
             button.disabled = true;
@@ -116,13 +131,6 @@
             setTimeout(function() {
                 button.form.submit();
             }, 500);
-            Swal.fire({
-                position: 'top-end',
-                icon: 'success',
-                title: 'Data berhasil ditambahkan',
-                showConfirmButton: false,
-                timer: 1500
-            })
         }
     </script>
     <script>
@@ -135,13 +143,6 @@
             setTimeout(function() {
                 button.form.submit();
             }, 500);
-            Swal.fire({
-                position: 'top-end',
-                icon: 'success',
-                title: 'Data berhasil diubah',
-                showConfirmButton: false,
-                timer: 1500
-            })
         }
     </script>
     <script>

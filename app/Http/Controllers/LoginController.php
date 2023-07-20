@@ -48,14 +48,12 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials)) {
             if (Auth::user()->role == 'admin') {
-                return redirect()->route('dashboard.index')
-                    ->withSuccess('You have Successfully logged in as an admin');
+                return redirect()->route('dashboard.index');
             } else if (Auth::user()->role == 'pengurus') {
-                return redirect()->route('dashboard.index')
-                    ->withSuccess('You have Successfully logged in');
+                return redirect()->route('dashboard.index');
             }
         }
-        return redirect("/dashboard")->withSuccess('Oppes! You have entered invalid credentials');
+        return redirect("/dashboard");
     }
 
     /**

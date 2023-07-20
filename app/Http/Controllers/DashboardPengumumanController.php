@@ -136,7 +136,7 @@ class DashboardPengumumanController extends Controller
         }
 
         return redirect()->route('dashboard.pengumuman.index', $pengumumanMasjid->id)
-            ->with('success', 'Pengumuman berhasil diperbarui');
+            ->with('edit', 'Pengumuman berhasil diperbarui');
     }
 
 

@@ -104,7 +104,7 @@ class DashboardSholatController extends Controller
             'imam' => $request->imam,
         ]);
 
-        return redirect()->route('dashboard.jadwal-sholat.index')->with('success', 'Data Berhasil Diperbarui');
+        return redirect()->route('dashboard.jadwal-sholat.index')->with('edit', 'Data Berhasil Diperbarui');
     }
 
     /**

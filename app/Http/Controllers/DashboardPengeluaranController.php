@@ -126,7 +126,7 @@ class DashboardPengeluaranController extends Controller
             'jumlah_pengeluaran' => $request->jumlah_pengeluaran,
         ]);
 
-        return redirect()->route('dashboard.laporan-pengeluaran.index')->with('success', 'Data Berhasil Diubah');
+        return redirect()->route('dashboard.laporan-pengeluaran.index')->with('edit', 'Data Berhasil Diubah');
     }
 
     /**

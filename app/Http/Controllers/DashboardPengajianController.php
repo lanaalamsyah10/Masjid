@@ -123,7 +123,7 @@ class DashboardPengajianController extends Controller
             'waktu' => $request->waktu,
         ]);
 
-        return redirect()->route('dashboard.jadwal-pengajian.index')->with('success', 'Data Berhasil Ditambahkan');
+        return redirect()->route('dashboard.jadwal-pengajian.index')->with('edit', 'Data Berhasil Ditambahkan');
     }
 
     /**

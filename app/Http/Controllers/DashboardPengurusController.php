@@ -46,14 +46,13 @@ class DashboardPengurusController extends Controller
                 'name' => 'required',
                 'jabatan' => 'required',
                 'jenis_kelamin' => 'required',
-                'no_hp' => 'required',
+                'no_hp' => 'nullable',
                 'alamat' => 'required',
             ],
             [
                 'name.required' => 'Nama tidak boleh kosong',
                 'jabatan.required' => 'Jabatan tidak boleh kosong',
                 'jenis_kelamin.required' => 'Jenis Kelamin tidak boleh kosong',
-                'no_hp.required' => 'No HP tidak boleh kosong',
                 'alamat.required' => 'Alamat tidak boleh kosong',
             ]
 
@@ -107,14 +106,13 @@ class DashboardPengurusController extends Controller
                 'name' => 'required',
                 'jabatan' => 'required',
                 'jenis_kelamin' => 'required',
-                'no_hp' => 'required',
+                'no_hp' => 'nullable',
                 'alamat' => 'required',
             ],
             [
                 'name.required' => 'Nama tidak boleh kosong',
                 'jabatan.required' => 'Jabatan tidak boleh kosong',
                 'jenis_kelamin.required' => 'Jenis Kelamin tidak boleh kosong',
-                'no_hp.required' => 'No HP tidak boleh kosong',
                 'alamat.required' => 'Alamat tidak boleh kosong',
             ]
         );
@@ -128,7 +126,7 @@ class DashboardPengurusController extends Controller
             'alamat' => $request->alamat,
         ]);
 
-        return redirect()->route('dashboard.biodata-pengurus.index')->with('success', 'Data Berhasil Ditambahkan');
+        return redirect()->route('dashboard.biodata-pengurus.index')->with('edit', 'Data Berhasil Ditambahkan');
     }
 
     /**
