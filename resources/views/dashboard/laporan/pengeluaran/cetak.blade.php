@@ -63,7 +63,7 @@
 </style>
 
 <body>
-    <h1>LAPORAN PEMASUKAN KAS MASJID AL-ISLAKH</h1>
+    <h1>LAPORAN PENGELUARAN KAS MASJID AL-ISLAKH</h1>
     <p class="text">Jl. Garuda, Karangampel Kidul, Kec. Karangampel, Kabupaten Indramayu, Jawa Barat 45283
     </p>
     <hr class="garis">
