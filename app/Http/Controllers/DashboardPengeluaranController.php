@@ -147,7 +147,7 @@ class DashboardPengeluaranController extends Controller
             $rekap->delete();
         }
 
-        return back()->with('success', 'Data Berhasil Dihapus');
+        return back();
     }
     public function cetak_pdf()
     {

@@ -118,6 +118,6 @@ class DashboardSholatController extends Controller
         $sholat = Sholat::find($id);
         $sholat->delete();
 
-        return back()->with('success', 'Data Berhasil Dihapus');
+        return back();
     }
 }

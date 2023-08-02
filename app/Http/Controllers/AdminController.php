@@ -142,6 +142,6 @@ class AdminController extends Controller
         $users = User::findOrFail($id);
         $users->delete();
 
-        return back()->with('success', 'Data Berhasil Dihapus');
+        return back();
     }
 }

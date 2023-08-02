@@ -126,6 +126,6 @@ class DashboardZakatMustahikController extends Controller
         $zakat_mustahik = ZakatMustahik::find($id);
         $zakat_mustahik->delete();
 
-        return back()->with('success', 'Data Berhasil Dihapus');
+        return back();
     }
 }

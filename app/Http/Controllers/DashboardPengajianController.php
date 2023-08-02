@@ -137,7 +137,6 @@ class DashboardPengajianController extends Controller
         $pengajian = Pengajian::findOrFail($id);
         $pengajian->delete();
 
-        return redirect()->route('dashboard.jadwal-pengajian.index')
-            ->with('success', 'Pengumuman berhasil dihapus');
+        return redirect()->route('dashboard.jadwal-pengajian.index');
     }
 }

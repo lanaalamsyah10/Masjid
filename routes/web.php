@@ -78,6 +78,8 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('/pengumuman', DashboardPengumumanController::class);
         //Kurban
         Route::resource('/kurban', DashboardKurbanController::class);
+        Route::post("/laporan-kurban/kurban", [DashboardKurbanController::class, "kurban"]);
+        Route::get("/laporan-kurban/unduh-periode/{tglawal}/{tglakhir}", [DashboardKurbanController::class, "filter_kurban"]);
         //Saran
         Route::resource('/saran', DashboardSaranController::class);
     });

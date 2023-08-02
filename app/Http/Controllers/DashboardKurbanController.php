@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Dompdf\Dompdf;
 use App\Models\Kurban;
 use Illuminate\Http\Request;
 
@@ -153,7 +154,48 @@ class DashboardKurbanController extends Controller
         $kurban = Kurban::findOrFail($id);
         $kurban->delete();
 
-        return redirect()->route('dashboard.kurban.index')
-            ->with('success', 'Pengumuman berhasil dihapus');
+        return redirect()->route('dashboard.kurban.index');
+    }
+
+    public function filter_kurban($tglawal, $tglakhir)
+    {
+        $kurban = Kurban::whereBetween('tanggal_masuk', [$tglawal, $tglakhir])->get();
+
+        // Buat objek Dompdf
+        $dompdf = new Dompdf();
+
+        // Load view PDF dan berikan data yang diperlukan
+        $html = view('dashboard.kurban.cetak_perbulan', [
+            "kurban" => $kurban,
+            "tglwal" => $tglawal,
+            "tglakhir" => $tglakhir,
+        ]);
+
+        // Konversi view HTML menjadi PDF
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+
+        // Generate nama file PDF
+        $filename = 'laporan_kurban_' . \Carbon\Carbon::parse($tglawal)->format('d-m-Y') . '.pdf';
+
+        // Mengirimkan hasil PDF sebagai respons file download
+        return $dompdf->stream($filename);
+    }
+
+    public function kurban(Request $request)
+    {
+        $tglawal = $request->input('tglawal');
+        $tglakhir = $request->input('tglakhir');
+
+        $Kurban = Kurban::whereBetween('tanggal_masuk', [$tglawal, $tglakhir])->get();
+
+        $totalKurban = Kurban::whereBetween('tanggal_masuk', [$tglawal, $tglakhir])->sum('jumlah');
+
+        return redirect("/kurban")->withInput()->with([
+            "tglawal" => $tglawal,
+            "tglakhir" => $tglakhir,
+            "Kurban" => $Kurban
+        ]);
     }
 }

@@ -32,6 +32,6 @@ class DashboardSaranController extends Controller
         $saran = Saran::find($id);
         $saran->delete();
 
-        return back()->with('success', 'Data Berhasil Dihapus');
+        return back();
     }
 }

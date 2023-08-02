@@ -140,6 +140,6 @@ class DashboardPengurusController extends Controller
         $pengurus = Pengurus::findOrFail($id);
         $pengurus->delete();
 
-        return back()->with('success', 'Data Berhasil Dihapus');
+        return back();
     }
 }

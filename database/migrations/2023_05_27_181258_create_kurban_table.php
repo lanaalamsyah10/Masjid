@@ -17,9 +17,9 @@ return new class extends Migration
             $table->id();
             $table->string('nama');
             $table->enum('hewan_kurban', ['Sapi', 'Kambing']);
-            $table->string('jumlah');
+            $table->float('jumlah');
             $table->string('permintaan');
-            $table->string('tanggal_masuk');
+            $table->date('tanggal_masuk');
             $table->timestamps();
         });
     }

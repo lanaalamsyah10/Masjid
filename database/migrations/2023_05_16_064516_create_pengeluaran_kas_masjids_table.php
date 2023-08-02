@@ -17,8 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('keterangan_pengeluaran');
             $table->decimal('jumlah_pengeluaran', 12, 2);
-            $table->string('tanggal_pengeluaran');
-
+            $table->date('tanggal_pengeluaran');
             $table->timestamps();
         });
     }

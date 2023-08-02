@@ -15,10 +15,10 @@ return new class extends Migration
     {
         Schema::create('pengajian', function (Blueprint $table) {
             $table->id();
-            $table->string('hari');
+            $table->enum('hari', ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu']);
             $table->string('pemateri');
             $table->string('materi');
-            $table->string('waktu');
+            $table->dateTime('waktu');
             $table->timestamps();
         });
     }

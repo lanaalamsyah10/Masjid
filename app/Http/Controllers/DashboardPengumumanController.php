@@ -159,7 +159,6 @@ class DashboardPengumumanController extends Controller
         // Hapus data pengumuman dari database
         $pengumumanMasjid->delete();
 
-        return redirect()->route('dashboard.pengumuman.index')
-            ->with('success', 'Pengumuman berhasil dihapus');
+        return redirect()->route('dashboard.pengumuman.index');
     }
 }

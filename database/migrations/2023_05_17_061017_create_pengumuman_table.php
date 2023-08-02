@@ -17,10 +17,10 @@ return new class extends Migration
             $table->id();
             $table->string('judul_pengumuman');
             $table->longText('isi_pengumuman');
-            $table->string('tanggal');
+            $table->date('tanggal');
             $table->string('gambar')->nullable();
             $table->string('tempat');
-            $table->string('waktu');
+            $table->dateTime('waktu');
             $table->timestamps();
         });
     }

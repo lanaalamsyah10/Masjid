@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('nama');
             $table->string('alamat')->nullable();
-            $table->string('tanggal');
+            $table->date('tanggal');
             $table->double('jumlah_beras', 12, 2)->nullable(); // Add this line
             $table->decimal('jumlah_uang', 12, 2)->nullable(); // Add this line
             $table->timestamps();
