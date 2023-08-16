@@ -47,20 +47,24 @@ Route::middleware(['auth'])->group(function () {
             Route::get('dashboard', 'index')->name('index');
         });
         //Rekap laporan
+        Route::get('generate-pdf-rekap', [DashboardRekapController::class, 'cetak_pdf'])->name('generate-pdf-rekap');
+
         Route::get('/laporan-rekap', [DashboardRekapController::class, 'index'])->name('laporan-rekap');
-        Route::get('/cetak-laporan-pdf', [DashboardRekapController::class, 'generatePDF'])->name('cetak-laporan-pdf');
+        Route::get('/laporan-rekap/filter', [DashboardRekapController::class, 'filter'])->name('laporan-rekap.filter');
+        // Route::get('/cetak-laporan-pdf{bulan}/{tahun}', [DashboardRekapController::class, 'generatePDF'])->name('cetak-laporan-pdf');
+
         Route::post("/laporan-rekap/rekap", [DashboardRekapController::class, "rekap"]);
         Route::get("/laporan-rekap/unduh-periode/{tglawal}/{tglakhir}", [DashboardRekapController::class, "filter_rekap"]);
         //PemasukanKasMasjid
         Route::resource('/laporan-pemasukan', DashboardPemasukanController::class);
-        Route::post("/laporan-pemasukan/pemasukan", [DashboardPemasukanController::class, "pemasukan"]);
-        Route::get("/laporan-pemasukan/unduh-periode/{tglawal}/{tglakhir}", [DashboardPemasukanController::class, "filter_pemasukan"]);
         Route::get('generate-pdf-pemasukan', [DashboardPemasukanController::class, 'cetak_pdf'])->name('generate-pdf-pemasukan');
+        // Route::post("/laporan-pemasukan/pemasukan", [DashboardPemasukanController::class, "pemasukan"]);
+        // Route::get("/laporan-pemasukan/unduh-periode/{tglawal}/{tglakhir}", [DashboardPemasukanController::class, "filter_pemasukan"]);
         //pengeluaranKasMasjid
         Route::resource('/laporan-pengeluaran', DashboardPengeluaranController::class);
-        Route::post("/laporan-pengeluaran/pengeluaran", [DashboardPengeluaranController::class, "pengeluaran"]);
-        Route::get("/laporan-pengeluaran/unduh-periode/{tglawal}/{tglakhir}", [DashboardPengeluaranController::class, "filter_pengeluaran"]);
         Route::get('generate-pdf-pengeluaran', [DashboardPengeluaranController::class, 'cetak_pdf'])->name('generate-pdf-pengeluaran');
+        // Route::post("/laporan-pengeluaran/pengeluaran", [DashboardPengeluaranController::class, "pengeluaran"]);
+        // Route::get("/laporan-pengeluaran/unduh-periode/{tglawal}/{tglakhir}", [DashboardPengeluaranController::class, "filter_pengeluaran"]);
         //Jadwal Pengajian
         Route::resource('/jadwal-pengajian', DashboardPengajianController::class);
         //Jadwal Sholat
@@ -71,15 +75,32 @@ Route::middleware(['auth'])->group(function () {
             Route::resource('/biodata-pengurus', DashboardPengurusController::class);
         });
         //Zakat fitrah
+        // Route::resource('zakat-zakat_fitrah', DashboardZakatFitrahController::class);
+        // Route::post('/zakat-zakat_fitrah/filter', [DashboardZakatFitrahController::class, 'filterByYear'])->name('zakat-zakat_fitrah.filter');
+
         Route::resource('zakat-zakat_fitrah', DashboardZakatFitrahController::class);
+        // Route::get('zakat-zakat_fitrah/print-preview/{tahun}', 'DashboardZakatFitrahController@printPreview')->name('zakat-zakat_fitrah.print-preview');
+        Route::get('generate-pdf-zakat_fitrah', [DashboardZakatFitrahController::class, 'downloadPDF'])
+            ->name('generate-pdf-zakat_fitrah');
+        // Route::post("/zakat-zakat_fitrah/zakat_fitrah", [DashboardZakatFitrahController::class, "zakat_fitrah"]);
+        // Route::get("/zakat-zakat_fitrah/unduh-periode/{tglawal}/{tglakhir}", [DashboardZakatFitrahController::class, "filter_zakat_fitrah"]);
         //Zakat mustahik
         Route::resource('zakat-zakat_mustahik', DashboardZakatMustahikController::class);
         // Pengumuman
         Route::resource('/pengumuman', DashboardPengumumanController::class);
         //Kurban
+        // Route::post('/kurban/filter', [DashboardKurbanController::class, 'filterByYear'])->name('kurban.filter');
+        // Route::get('/kurban/download-pdf/{tahun}', [DashboardKurbanController::class, 'download_pdf'])->name('dashboard.kurban.download-pdf');
+        // Route::get('/dashboard/kurban/download-pdf', [DashboardKurbanController::class, 'downloadPDF'])->name('dashboard.kurban.download-pdf');
+
         Route::resource('/kurban', DashboardKurbanController::class);
-        Route::post("/laporan-kurban/kurban", [DashboardKurbanController::class, "kurban"]);
-        Route::get("/laporan-kurban/unduh-periode/{tglawal}/{tglakhir}", [DashboardKurbanController::class, "filter_kurban"]);
+        // Route::get('/kurban/filter', [DashboardKurbanController::class, 'filter'])->name('dashboard.kurban.filter');
+
+        Route::get('generate-pdf-kurban', [DashboardKurbanController::class, 'downloadPDF'])
+            ->name('generate-pdf-kurban');
+
+        // Route::post("/laporan-kurban/kurban", [DashboardKurbanController::class, "kurban"]);
+        // Route::get("/laporan-kurban/unduh-periode/{tglawal}/{tglakhir}", [DashboardKurbanController::class, "filter_kurban"]);
         //Saran
         Route::resource('/saran', DashboardSaranController::class);
     });

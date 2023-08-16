@@ -40,82 +40,57 @@
 </style>
 
 <body>
-    <h1>LAPORAN PENGELUARAN KAS MASJID AL-ISLAKH</h1>
+    <h1>LAPORAN REKAP KAS MASJID AL-ISLAKH</h1>
     <p class="text">Jl. Garuda, Karangampel Kidul, Kec. Karangampel, Kabupaten Indramayu, Jawa Barat 45283
     </p>
     <hr class="garis">
-    <p>Total Pemasukan: {{ $total_pemasukan }}</p>
-    <p>Total Pengeluaran: {{ $total_pengeluaran }}</p>
-    <p>Total Keseluruhan: {{ $total_keseluruhan }}</p>
-    <h4> Periode tanggal:
-        {{-- {{ \Carbon\Carbon::parse($tglwal)->format('d-m-Y') }}&nbsp;-
-        {{ \Carbon\Carbon::parse($tglakhir)->format('d-m-Y') }} --}}
-    </h4>
+    <h4>Data Rekap Kas Bulan {{ $bulan }}</h4>
+    <h4>Tahun : {{ $tahun }} </h4>
     <table style="width:100%">
         <thead>
             <tr>
                 <th>No</th>
-                <th>Uraian Pemasukan</th>
+                <th>Uraian</th>
                 <th>Jumlah Pemasukan</th>
-                <th>Tanggal Pemasukan</th>
-                <th>Uraian Pengeluaran</th>
                 <th>Jumlah Pengeluaran</th>
-                <th>Tanggal Pengeluaran</th>
+                <th>Tanggal</th>
             </tr>
         </thead>
         <tbody>
             @foreach ($rekap_kas as $data)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
+                    <td>{{ $data->keterangan }}</td>
                     <td>
-                        {{ $data->pemasukan ? $data->pemasukan->keterangan_pemasukan : '-' }}
-                    </td>
-                    <td>
-                        @if ($data->pemasukan)
-                            {{ 'Rp ' . number_format($data->pemasukan->jumlah_pemasukan, 0, ',', '.') }}
+                        @if ($data->tipe == 'pemasukan')
+                            {{ 'Rp. ' . number_format($data->jumlah, 0, ',', '.') }}
                         @else
-                            <p class="text-muted">-</p>
+                            Rp. 0
                         @endif
                     </td>
                     <td>
-                        @if ($data->pemasukan)
-                            {{ \Carbon\Carbon::parse($data->pemasukan['tanggal_pemasukan'])->format('d-m-Y') }}
+                        @if ($data->tipe == 'pengeluaran')
+                            {{ 'Rp. ' . number_format($data->jumlah, 0, ',', '.') }}
                         @else
-                            <p class="text-muted">-</p>
+                            Rp. 0
                         @endif
                     </td>
-                    <td>
-                        @if ($data->pengeluaran)
-                            {{ $data->pengeluaran->keterangan_pengeluaran }}
-                        @else
-                            <p class="text-muted">-</p>
-                        @endif
-                    </td>
-                    <td>
-                        @if ($data->pengeluaran)
-                            {{ 'Rp ' . number_format($data->pengeluaran->jumlah_pengeluaran, 0, ',', '.') }}
-                        @else
-                            <p class="text-muted">-</p>
-                        @endif
-                    </td>
-                    <td>
-                        @if ($data->pengeluaran)
-                            {{ \Carbon\Carbon::parse($data->pengeluaran['tanggal_pengeluaran'])->format('d-m-Y') }}
-                        @else
-                            <p class="text-muted">-</p>
-                        @endif
-                    </td>
+                    <td>{{ \Carbon\Carbon::parse($data->tanggal)->format('d-m-Y') }}</td>
                 </tr>
             @endforeach
-            {{-- <tr>
-                <td colspan="3">Saldo kas sebelumnya :</td>
-                <th>{{ 'Rp ' . number_format($total_pengeluaranSebelum, 0, ',', '.') }}</th>
-            </tr>
-
             <tr>
-                <td colspan="3">Jumlah akhir :</td>
-                <th>{{ 'Rp ' . number_format($total_pengeluaran, 0, ',', '.') }}</th>
-            </tr> --}}
+                <th colspan="5">Total Pemasukan :
+                    {{ 'Rp ' . number_format($total_pemasukan, 0, ',', '.') }}</th>
+            </tr>
+            <tr>
+                <th colspan="5">Total Pengeluaran :
+                    {{ 'Rp ' . number_format($total_pengeluaran, 0, ',', '.') }}</th>
+            </tr>
+            <tr>
+                <th colspan="5">Saldo :
+                    {{ 'Rp ' . number_format($total_keseluruhan, 0, ',', '.') }}
+                </th>
+            </tr>
         </tbody>
     </table>
 

@@ -9,6 +9,6 @@ class Kurban extends Model
 {
     use HasFactory;
 
-        protected $guarded = [];
-        protected $table = 'kurban';
+    protected $guarded = [];
+    protected $table = 'kurban';
 }

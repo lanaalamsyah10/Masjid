@@ -13,7 +13,6 @@
             <div class="card-body">
 
                 <h4 class="mt-0 header-title">Saldo Pemasukan Kas Masjid Al-Islakh</h4>
-
                 <div class="">
                     <div class="alert alert-success text-light "
                         style="background: linear-gradient(to top, #08CAA2,#058BA0);" role="alert">
@@ -28,6 +27,33 @@
         </div>
     </div>
     <div class="col-lg-13">
+        <div class="card m-b-30">
+            <div class="card-body">
+                <h4 class="mt-0 header-title mb-3">Filter Bulan:</h4>
+                <form action="{{ url('/laporan-pemasukan') }}" method="get">
+                    @csrf
+                    <select name="bulan" id="bulan" class="form-control">
+                        <option value="">Pilih Bulan</option>
+                        @foreach ($months as $month)
+                            <option value="{{ $month }}">{{ $month }}</option>
+                        @endforeach
+                    </select>
+                    <div class="d-flex mt-2 justify-content-between">
+                        @if ($bulan)
+                            <a href="{{ route('dashboard.generate-pdf-pemasukan', ['bulan' => $bulan]) }}" target="_blank"
+                                class="btn btn-success border-0" style="background-color: rgb(172, 0, 129)"><i
+                                    class="fa fa-download"> Unduh</i></a>
+                        @endif
+                        <button class="btn btn-sm btn-info ml-auto">
+                            Cari...&nbsp;
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {{-- <div class="col-lg-13">
         <div class="card m-b-30">
             <div class="card-body">
                 <h4 class="mt-0 header-title mb-3">Unduh laporan pemasukan kas pertanggal</h4>
@@ -64,7 +90,7 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div> --}}
     <div class="row">
         <div class="col-12">
             <div class="card m-b-30">
@@ -74,12 +100,12 @@
                             <a class="btn btn-sm btn-success" href="{{ route('dashboard.laporan-pemasukan.create') }}"
                                 role="button">Tambah Data</a>
                         </div>
-                        <div class="col text-right">
+                        {{-- <div class="col text-right">
                             <a class="btn btn-sm btn-success mb-2 nobe " style="background-color: rgb(172, 0, 129)"
                                 href="{{ route('dashboard.generate-pdf-pemasukan') }}" role="button"><i
                                     class="mdi mdi-download"></i>
                                 Unduh</a>
-                        </div>
+                        </div> --}}
                     </div>
                     <div class="table-responsive mt-3">
                         <table id="datatable" class="table">
@@ -89,45 +115,31 @@
                                     <th>Keterangan</th>
                                     <th>Jumlah</th>
                                     <th>Tanggal</th>
+                                    <th>Penanggung Jawab</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @if (empty(session('pemasukanKas')))
-                                    @forelse ($pemasukanKas as $item)
-                                        <tr>
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>{{ $item->keterangan_pemasukan }}</td>
-                                            <td>{{ 'Rp ' . number_format($item->jumlah_pemasukan, 0, ',', '.') }}</td>
-                                            {{-- <td>{{ $item->tanggal_pemasukan }}</td> --}}
-                                            <td>{{ \Carbon\Carbon::parse($item['tanggal_pemasukan'])->format('d-m-Y') }}
-                                            </td>
-                                            <td>
-                                                <div class=" d-flex button-items">
-                                                    <a class="btn btn-info"
-                                                        href="{{ route('dashboard.laporan-pemasukan.edit', $item->id) }}"
-                                                        role="button"><i class="mdi mdi-lead-pencil"></i></a>
-                                                    <form
-                                                        action="{{ route('dashboard.laporan-pemasukan.destroy', $item->id) }}"
-                                                        method="POST" onsubmit="return deleteConfirmation(event)">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger"><i
-                                                                class="mdi mdi-delete"></i></button>
-                                                    </form>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @endforeach
+                                {{-- @if ($bulan == null)
+                                    
+                                    <p class="text-center">Silahkan pilih bulan terlebih dahulu</p>
+                                @else --}}
+                                @if ($pemasukanKas->isEmpty())
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        Tidak ada data yang tersedia, Silahkan pilih bulan terlebih dahulu.
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
                                 @else
-                                    @forelse (session("pemasukanKas") as $item)
+                                    @foreach ($pemasukanKas as $item)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
                                             <td>{{ $item->keterangan_pemasukan }}</td>
-                                            <td>{{ 'Rp ' . number_format($item->jumlah_pemasukan, 0, ',', '.') }}</td>
-                                            {{-- <td>{{ $item->tanggal_pemasukan }}</td> --}}
+                                            <td>{{ 'Rp. ' . number_format($item->jumlah_pemasukan, 0, ',', '.') }}</td>
                                             <td>{{ \Carbon\Carbon::parse($item['tanggal_pemasukan'])->format('d-m-Y') }}
                                             </td>
+                                            <td>{{ $item->user->name }}</td>
                                             <td>
                                                 <div class=" d-flex button-items">
                                                     <a class="btn btn-info"

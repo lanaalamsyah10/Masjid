@@ -8,7 +8,9 @@ use App\Models\Rekap;
 use Illuminate\Http\Request;
 use App\Models\PemasukanKasMasjid;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\App;
 use App\Models\PengeluaranKasMasjid;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardPengeluaranController extends Controller
 {
@@ -17,15 +19,50 @@ class DashboardPengeluaranController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = [
-            "total_pengeluaran" => PengeluaranKasMasjid::sum('jumlah_pengeluaran'),
-            "pengeluaran_kas" => PengeluaranKasMasjid::orderBy('created_at', 'desc')->get()
-        ];
+        $bulan = $request->input('bulan');
+        $months = PengeluaranKasMasjid::selectRaw('MONTH(tanggal_pengeluaran) as month')->distinct()->orderBy('month', 'desc')->pluck('month');
 
-        return view('dashboard.laporan.pengeluaran.index', $data);
+        if ($bulan) {
+            $pengeluaran_kas = PengeluaranKasMasjid::whereMonth('tanggal_pengeluaran', $bulan)->orderBy('tanggal_pengeluaran', 'desc')->get();
+
+            $total_pengeluaran = $pengeluaran_kas->sum('jumlah_pengeluaran');
+            $user = Auth::user();
+        } else {
+            // Menampilkan data bulan terakhir secara default
+            // $lastMonth = $months->first();
+            // $pengeluaran_kas = PengeluaranKasMasjid::whereMonth('tanggal_pengeluaran', $lastMonth)->orderBy('tanggal_pengeluaran', 'desc')->get();
+            $pengeluaran_kas = PengeluaranKasMasjid::orderByDesc('created_at')->get();
+
+            $total_pengeluaran = 0;
+            $user = Auth::user();
+        }
+
+        // $total_pengeluaran = PengeluaranKasMasjid::sum('jumlah_pengeluaran');
+
+        // $pengeluaran_kas = PengeluaranKasMasjid::orderBy('created_at', 'desc')->get();
+        return view('dashboard.laporan.pengeluaran.index', [
+            'total_pengeluaran' => $total_pengeluaran,
+            'pengeluaran_kas' => $pengeluaran_kas,
+            'user' => $user,
+            'bulan' => $bulan,
+            'months' => $months,
+        ]);
     }
+    // public function index()
+    // {
+    //     $user = Auth::user();
+
+    //     $total_pengeluaran = PengeluaranKasMasjid::sum('jumlah_pengeluaran');
+
+    //     $pengeluaran_kas = PengeluaranKasMasjid::orderBy('created_at', 'desc')->get();
+    //     return view('dashboard.laporan.pengeluaran.index', [
+    //         'total_pengeluaran' => $total_pengeluaran,
+    //         'pengeluaran_kas' => $pengeluaran_kas,
+    //         'user' => $user,
+    //     ]);
+    // }
 
     /**
      * Show the form for creating a new resource.
@@ -47,6 +84,7 @@ class DashboardPengeluaranController extends Controller
      */
     public function store(Request $request)
     {
+        $user = Auth::user();
         // validate saldo jika saldo tidak mencukupi maka akan di redirect ke halaman sebelumnya
         $total_pemasukan = PemasukanKasMasjid::sum('jumlah_pemasukan');
         $total_pengeluaran = PengeluaranKasMasjid::sum('jumlah_pengeluaran');
@@ -59,6 +97,7 @@ class DashboardPengeluaranController extends Controller
         }
 
         $pengeluaran = PengeluaranKasMasjid::create([
+            'user_id' => $user->id,
             'tanggal_pengeluaran' => $request->tanggal_pengeluaran,
             'keterangan_pengeluaran' => $request->keterangan_pengeluaran,
             'jumlah_pengeluaran' => $requested_pengeluaran,
@@ -149,75 +188,93 @@ class DashboardPengeluaranController extends Controller
 
         return back();
     }
-    public function cetak_pdf()
+    public function cetak_pdf(Request $request)
     {
-        $pengeluaran = PengeluaranKasMasjid::all();
-        $total_pengeluaran = PengeluaranKasMasjid::sum('jumlah_pengeluaran');
+        $bulan = $request->input('bulan');
+        $months = PengeluaranKasMasjid::selectRaw('MONTH(tanggal_pengeluaran) as month')->distinct()->orderBy('month', 'desc')->pluck('month');
 
+        if ($bulan) {
+            $pengeluaran_kas = PengeluaranKasMasjid::whereMonth('tanggal_pengeluaran', $bulan)->orderBy('tanggal_pengeluaran', 'desc')->get();
+
+            $total_pengeluaran = $pengeluaran_kas->sum('jumlah_pengeluaran');
+            $user = Auth::user();
+        } else {
+            // Menampilkan data bulan terakhir secara default
+            // $lastMonth = $months->first();
+            // $pengeluaran_kas = PengeluaranKasMasjid::whereMonth('tanggal_pengeluaran', $lastMonth)->orderBy('tanggal_pengeluaran', 'desc')->get();
+            $pengeluaran_kas = PengeluaranKasMasjid::orderByDesc('created_at')->get();
+
+            $total_pengeluaran = 0;
+            $user = Auth::user();
+        }
         $dompdf = new Dompdf();
-
+        $dompdf = App::make('dompdf.wrapper');
         // Load view PDF dan berikan data yang diperlukan
         $html = view('dashboard.laporan.pengeluaran.cetak', [
-            'pengeluaran' => $pengeluaran,
-            'total_pengeluaran' => $total_pengeluaran
+            'total_pengeluaran' => $total_pengeluaran,
+            'pengeluaran_kas' => $pengeluaran_kas,
+            'user' => $user,
+            'bulan' => $bulan,
+            'months' => $months,
         ]);
 
         // Konversi view HTML menjadi PDF
         $dompdf->loadHtml($html);
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
+
         // Generate nama file PDF
-        $filename = 'laporan-pengeluaran-kas' . 'pdf';
+        $filename = 'laporan-pemasukan-kas-bulan' . $bulan . '.pdf';
 
         // Mengirimkan hasil PDF sebagai respons file download
         return $dompdf->stream($filename);
     }
 
     //cetak pertanggal
-    public function filter_pengeluaran($tglawal, $tglakhir)
-    {
-        // Total pengeluaran sebelum tanggal awal
-        $totalPengeluaranSebelum = PengeluaranKasMasjid::where('tanggal_pengeluaran', '<', $tglawal)
-            ->sum('jumlah_pengeluaran');
+    // public function filter_pengeluaran($tglawal, $tglakhir)
+    // {
+    //     // Total pengeluaran sebelum tanggal awal
+    //     $totalPengeluaranSebelum = PengeluaranKasMasjid::where('tanggal_pengeluaran', '<', $tglawal)
+    //         ->sum('jumlah_pengeluaran');
 
-        $pengeluaran = PengeluaranKasMasjid::whereBetween('tanggal_pengeluaran', [$tglawal, $tglakhir])->get();
+    //     $pengeluaran = PengeluaranKasMasjid::whereBetween('tanggal_pengeluaran', [$tglawal, $tglakhir])->get();
 
-        // Buat objek Dompdf
-        $dompdf = new Dompdf();
+    //     // Buat objek Dompdf
+    //     $dompdf = new Dompdf();
 
-        // Load view PDF dan berikan data yang diperlukan
-        $html = view('dashboard.laporan.pengeluaran.cetak_perbulan', [
-            "pengeluaran" => $pengeluaran,
-            "tglwal" => $tglawal,
-            "tglakhir" => $tglakhir,
-            "total" => $totalPengeluaranSebelum
-        ]);
+    //     // Load view PDF dan berikan data yang diperlukan
+    //     $html = view('dashboard.laporan.pengeluaran.cetak_perbulan', [
+    //         "pengeluaran" => $pengeluaran,
+    //         "tglwal" => $tglawal,
+    //         "tglakhir" => $tglakhir,
+    //         "total" => $totalPengeluaranSebelum
+    //     ]);
 
-        // Konversi view HTML menjadi PDF
-        $dompdf->loadHtml($html);
-        $dompdf->setPaper('A4', 'portrait');
-        $dompdf->render();
+    //     // Konversi view HTML menjadi PDF
+    //     $dompdf->loadHtml($html);
+    //     $dompdf->setPaper('A4', 'portrait');
+    //     $dompdf->render();
 
-        // Generate nama file PDF
-        $filename = 'laporan_pengeluran_' . \Carbon\Carbon::parse($tglawal)->format('d-m-Y') . '_' . \Carbon\Carbon::parse($tglakhir)->format('d-m-Y') . '.pdf';
+    //     // Generate nama file PDF
+    //     $filename = 'laporan_pengeluran_' . \Carbon\Carbon::parse($tglawal)->format('d-m-Y') . '_' . \Carbon\Carbon::parse($tglakhir)->format('d-m-Y') . '.pdf';
 
-        // Mengirimkan hasil PDF sebagai respons file download
-        return $dompdf->stream($filename);
-    }
+    //     // Mengirimkan hasil PDF sebagai respons file download
+    //     return $dompdf->stream($filename);
+    // }
 
-    public function pengeluaran(Request $request)
-    {
-        $tglawal = $request->input('tglawal');
-        $tglakhir = $request->input('tglakhir');
+    // public function pengeluaran(Request $request)
+    // {
+    //     $tglawal = $request->input('tglawal');
+    //     $tglakhir = $request->input('tglakhir');
 
-        $pengeluaranKas = PengeluaranKasMasjid::whereBetween('tanggal_pengeluaran', [$tglawal, $tglakhir])->get();
+    //     $pengeluaranKas = PengeluaranKasMasjid::whereBetween('tanggal_pengeluaran', [$tglawal, $tglakhir])->get();
 
-        $totalPengeluaran = PengeluaranKasMasjid::whereBetween('tanggal_pengeluaran', [$tglawal, $tglakhir])->sum('jumlah_pengeluaran');
+    //     $totalPengeluaran = PengeluaranKasMasjid::whereBetween('tanggal_pengeluaran', [$tglawal, $tglakhir])->sum('jumlah_pengeluaran');
 
-        return redirect("/laporan-pengeluaran")->withInput()->with([
-            "tglawal" => $tglawal,
-            "tglakhir" => $tglakhir,
-            "pengeluaranKas" => $pengeluaranKas
-        ]);
-    }
+    //     return redirect("/laporan-pengeluaran")->withInput()->with([
+    //         "tglawal" => $tglawal,
+    //         "tglakhir" => $tglakhir,
+    //         "pengeluaranKas" => $pengeluaranKas
+    //     ]);
+    // }
 }

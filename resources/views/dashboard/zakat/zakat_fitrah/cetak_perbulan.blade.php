@@ -40,24 +40,59 @@
 </style>
 
 <body>
-    <h1>LAPORAN KURBAN MASJID AL-ISLAKH</h1>
+    <h1>LAPORAN ZAKAT FITRAH MASJID AL-ISLAKH</h1>
     <p class="text">Jl. Garuda, Karangampel Kidul, Kec. Karangampel, Kabupaten Indramayu, Jawa Barat 45283
     </p>
     <hr class="garis">
-    <h4>Kurban Tahun : {{ $tahun }}</h4>
+    <h4>Zakat Fitrah Tahun : {{ $tahun }}
+    </h4>
     <table style="width:100%">
         <thead>
             <tr>
                 <th>No</th>
                 <th>Nama</th>
-                <th>Hewan Kurban</th>
-                <th>Jumlah Kurban</th>
-                <th>Permintaan</th>
+                <th>Alamat</th>
+                <th>Jumlah Uang</th>
+                <th>Jumlah Beras</th>
                 <th>Tanggal</th>
             </tr>
         </thead>
         <tbody>
-            @php
+            @forelse ($zakat_fitrah as $item)
+                <tr>
+                    <td>
+                        {{ $loop->iteration }}
+                    </td>
+                    <td>
+                        {{ $item->nama }}
+                    </td>
+                    <td>
+                        {{ $item->alamat }}
+                    </td>
+                    <td>
+                        @if (isset($item->jumlah_uang))
+                            {{ 'Rp. ' . number_format($item->jumlah_uang, 0, ',', '.') }}
+                        @else
+                            Rp. 0
+                        @endif
+                    </td>
+                    <td>
+                        @if (isset($item->jumlah_beras))
+                            {{ $item->jumlah_beras }} kg
+                        @else
+                            0 kg
+                        @endif
+                    </td>
+                    <td>{{ \Carbon\Carbon::parse($item['tanggal'])->format('d-m-Y') }}</td>
+                </tr>
+            @endforeach
+            <tr>
+                <th colspan="6">Jumlah Beras : {{ $total_beras }} kg</th>
+            </tr>
+            <tr>
+                <th colspan="6">Jumlah Uang : {{ 'Rp. ' . number_format($total_uang, 0, ',', '.') }}</th>
+            </tr>
+            {{-- @php
                 $jumlahakhir = 0;
             @endphp
             @foreach ($kurban as $item)
@@ -75,14 +110,9 @@
             @endforeach
 
             <tr>
-                <th colspan="6">Jumlah Sapi : {{ $totalSapi }}</th>
-            </tr>
-            <tr>
-                <th colspan="6">Jumlah Kambing : {{ $totalKambing }}</th>
-            </tr>
-            <tr>
-                <th colspan="6">Jumlah Kurban : {{ $totalKurban }}</th>
-            </tr>
+                <td colspan="5">Jumlah Kurban :</td>
+                <th>{{ $jumlahakhir }}</th>
+            </tr> --}}
         </tbody>
     </table>
 

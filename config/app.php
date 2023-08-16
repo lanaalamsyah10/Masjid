@@ -216,4 +216,6 @@ return [
 
     ])->toArray(),
 
+
+    'locale' => 'id',
 ];

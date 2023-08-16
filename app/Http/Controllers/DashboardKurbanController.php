@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Dompdf\Dompdf;
 use App\Models\Kurban;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 
 class DashboardKurbanController extends Controller
 {
@@ -14,24 +15,86 @@ class DashboardKurbanController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function index()
+    public function index(Request $request)
     {
-        $kurban = Kurban::orderBy('created_at', 'desc')->get();
-        $data = Kurban::all();
+        $tahun = $request->input('tahun');
+        $years = Kurban::selectRaw('YEAR(tanggal_masuk) as year')->distinct()->orderBy('year', 'desc')->pluck('year');
+        $filteredParameters = $request->except(['_token', 'tahun']);
+        $urlWithoutTokenAndTahun = route('dashboard.kurban.index', $filteredParameters);
 
-        $totalSapi = 0;
-        $totalKambing = 0;
+        if ($tahun) {
+            $kurban = Kurban::whereYear('tanggal_masuk', $tahun)->orderBy('tanggal_masuk', 'desc')->get();
 
-        foreach ($data as $row) {
-            if ($row->hewan_kurban === 'Sapi') {
-                $totalSapi += $row->jumlah;
-            } elseif ($row->hewan_kurban === 'Kambing') {
-                $totalKambing += $row->jumlah;
-            }
+            $totalSapi = $kurban->where('hewan_kurban', 'Sapi')->sum('jumlah');
+            $totalKambing = $kurban->where('hewan_kurban', 'Kambing')->sum('jumlah');
+            $totalKurban = $kurban->sum('jumlah');
+        } else {
+            $kurban = Kurban::orderByDesc('created_at')->get();
+
+            $totalSapi = 0;
+            $totalKambing = 0;
+            $totalKurban = 0;
         }
-        $totalKurban = $kurban->sum('jumlah');
+        return view('dashboard.kurban.index', [
+            "totalKurban" => $totalKurban,
+            "totalKambing" => $totalKambing,
+            "totalSapi" => $totalSapi,
+            "kurban" => $kurban,
+            'tahun' => $tahun,
+            'years' => $years,
+            'urlWithoutTokenAndTahun' => $urlWithoutTokenAndTahun,
+        ]);
+    }
 
-        return view('dashboard.kurban.index', compact('kurban', 'totalSapi', 'totalKambing', 'totalKurban'));
+    // public function test(Request $request, $tahun)
+    // {
+    //     $kurban = Kurban::whereYear('tanggal_masuk', $tahun)->orderBy('tanggal_masuk', 'desc')->get();
+    //     $dompdf = new Dompdf();
+    //     $dompdf = App::make('dompdf.wrapper');
+    //     $html = view('dashboard.kurban.cetak_perbulan', [
+    //         "kurban" => $kurban
+    //     ]);
+    //     $dompdf->loadHtml($html);
+    //     $dompdf->setPaper('A4', 'portrait');
+    //     $dompdf->render();
+    //     $filename = 'laporan_kurban_tahun_' . ($tahun ? $tahun : 'all_years') . '.pdf';
+    //     return $dompdf->stream($filename);
+    // }
+
+
+    public function downloadPDF(Request $request)
+    {
+        $tahun = $request->input('tahun');
+        $years = Kurban::selectRaw('YEAR(tanggal_masuk) as year')->distinct()->orderBy('year', 'desc')->pluck('year');
+        if ($tahun) {
+            $kurban = Kurban::whereYear('tanggal_masuk', $tahun)->orderBy('tanggal_masuk', 'desc')->get();
+
+            $totalSapi = $kurban->where('hewan_kurban', 'Sapi')->sum('jumlah');
+            $totalKambing = $kurban->where('hewan_kurban', 'Kambing')->sum('jumlah');
+            $totalKurban = $kurban->sum('jumlah');
+        } else {
+            $kurban = Kurban::orderByDesc('created_at')->get();
+
+            $totalSapi = 0;
+            $totalKambing = 0;
+            $totalKurban = 0;
+        }
+
+        $dompdf = new Dompdf();
+        $dompdf = App::make('dompdf.wrapper');
+        $html = view('dashboard.kurban.cetak_perbulan', [
+            "totalKurban" => $totalKurban,
+            "totalKambing" => $totalKambing,
+            "totalSapi" => $totalSapi,
+            "kurban" => $kurban,
+            'tahun' => $tahun,
+            'years' => $years
+        ]);
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+        $filename = 'laporan_kurban_tahun' . ($tahun ? $tahun : 'all_years') . '.pdf';
+        return $dompdf->stream($filename);
     }
     /**
      * Show the form for creating a new resource.

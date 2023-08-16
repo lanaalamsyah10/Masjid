@@ -40,7 +40,7 @@
 </style>
 
 <body>
-    <h1>LAPORAN PEMASUKAN KAS MASJID AL-ISLAKH</h1>
+    {{-- <h1>LAPORAN PEMASUKAN KAS MASJID AL-ISLAKH</h1>
     <p class="text">Jl. Garuda, Karangampel Kidul, Kec. Karangampel, Kabupaten Indramayu, Jawa Barat 45283
     </p>
     <hr class="garis">
@@ -54,7 +54,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($pemasukan as $data)
+            @foreach ($pemasukanKas as $data)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $data['keterangan_pemasukan'] }}</td>
@@ -67,7 +67,66 @@
                 <th>{{ 'Rp ' . number_format($totalPemasukan, 0, ',', '.') }}</th>
             </tr>
         </tbody>
+    </table> --}}
+
+    <h1>LAPORAN PEMASUKAN KAS MASJID AL-ISLAKH</h1>
+    <p class="text">Jl. Garuda, Karangampel Kidul, Kec. Karangampel, Kabupaten Indramayu, Jawa Barat 45283</p>
+    <hr class="garis">
+    <h4>Pemasukan Kas Bulan : {{ $bulan }}</h4>
+    <table style="width:100%">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Keterangan</th>
+                <th>Tanggal</th>
+                <th>Jumlah</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($pemasukanKas as $data)
+                <tr>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $data['keterangan_pemasukan'] }}</td>
+                    <td>{{ \Carbon\Carbon::parse($data['tanggal_pemasukan'])->format('d-m-Y') }}</td>
+                    <td>{{ 'Rp ' . number_format($data->jumlah_pemasukan, 0, ',', '.') }}</td>
+                </tr>
+            @endforeach
+            <tr>
+                <td colspan="3">Total saldo bulan ini:</td>
+                <th>{{ 'Rp ' . number_format($totalPemasukan, 0, ',', '.') }}</th>
+            </tr>
+            {{-- <tr>
+                <td colspan="3">Total saldo bulan sebelumnya:</td>
+                <th>{{ 'Rp ' . number_format($totalPemasukanSebelum - $totalPengeluaranSebelum, 0, ',', '.') }}</th>
+            </tr> --}}
+        </tbody>
     </table>
+
+    {{-- <h2>Data Pemasukan Bulan Sebelumnya</h2>
+    <table style="width:100%">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Keterangan</th>
+                <th>Tanggal</th>
+                <th>Jumlah</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($pemasukanKasSebelum as $data)
+                <tr>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $data['keterangan_pemasukan'] }}</td>
+                    <td>{{ $data['tanggal_pemasukan'] }}</td>
+                    <td>{{ 'Rp ' . number_format($data->jumlah_pemasukan, 0, ',', '.') }}</td>
+                </tr>
+            @endforeach
+            <tr>
+                <td colspan="3">Total saldo bulan sebelumnya:</td>
+                <th>{{ 'Rp ' . number_format($totalPemasukanSebelum, 0, ',', '.') }}</th>
+            </tr>
+        </tbody>
+    </table> --}}
 
 </body>
 

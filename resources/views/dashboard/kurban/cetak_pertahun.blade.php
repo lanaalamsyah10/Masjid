@@ -44,7 +44,10 @@
     <p class="text">Jl. Garuda, Karangampel Kidul, Kec. Karangampel, Kabupaten Indramayu, Jawa Barat 45283
     </p>
     <hr class="garis">
-    <h4>Kurban Tahun : {{ $tahun }}</h4>
+    <h4> Tanggal:
+        {{-- {{ \Carbon\Carbon::parse($tglwal)->format('d-m-Y') }}&nbsp;- --}}
+        {{-- {{ \Carbon\Carbon::parse($tglakhir)->format('d-m-Y') }} --}}
+    </h4>
     <table style="width:100%">
         <thead>
             <tr>
@@ -57,13 +60,7 @@
             </tr>
         </thead>
         <tbody>
-            @php
-                $jumlahakhir = 0;
-            @endphp
             @foreach ($kurban as $item)
-                @php
-                    $jumlahakhir += $item->jumlah;
-                @endphp
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $item->nama }}</td>
@@ -74,15 +71,10 @@
                 </tr>
             @endforeach
 
-            <tr>
-                <th colspan="6">Jumlah Sapi : {{ $totalSapi }}</th>
-            </tr>
-            <tr>
-                <th colspan="6">Jumlah Kambing : {{ $totalKambing }}</th>
-            </tr>
-            <tr>
-                <th colspan="6">Jumlah Kurban : {{ $totalKurban }}</th>
-            </tr>
+            {{-- <tr>
+                <td colspan="5">Jumlah Kurban :</td>
+                <th>{{ $jumlahakhir }}</th>
+            </tr> --}}
         </tbody>
     </table>
 

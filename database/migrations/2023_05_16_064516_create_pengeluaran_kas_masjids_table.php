@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('keterangan_pengeluaran');
             $table->decimal('jumlah_pengeluaran', 12, 2);
             $table->date('tanggal_pengeluaran');
+            $table->string('user_id');
             $table->timestamps();
         });
     }

@@ -10,7 +10,6 @@
     <div class="col-lg-13">
         <div class="card m-b-30">
             <div class="card-body">
-
                 <h4 class="mt-0 header-title">Total Hewan Kurban Masjid Al-Islakh</h4>
 
                 <div class="">
@@ -34,6 +33,33 @@
     <div class="col-lg-13">
         <div class="card m-b-30">
             <div class="card-body">
+                <h4 class="mt-0 header-title mb-3">Filter Tahun:</h4>
+                <form id="filterForm" action="{{ $urlWithoutTokenAndTahun }}" method="get">
+                    @csrf
+                    <select name="tahun" id="tahun" class="form-control">
+                        <option value="">Pilih Tahun</option>
+                        @foreach ($years as $year)
+                            <option value="{{ $year }}">{{ $year }}</option>
+                        @endforeach
+                    </select>
+                    <div class="d-flex mt-2 justify-content-between">
+                        @if ($tahun)
+                            <a href="{{ route('dashboard.generate-pdf-kurban', ['tahun' => $tahun]) }}"
+                                class="btn btn-success border-0" target="_blank"
+                                style="background-color: rgb(172, 0, 129)"><i class="fa fa-download"> Unduh</i></a>
+                        @endif
+                        <button class="btn btn-sm btn-info ml-auto">
+                            Cari...&nbsp;
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {{-- <div class="col-lg-13">
+        <div class="card m-b-30">
+            <div class="card-body">
                 <h4 class="mt-0 header-title mb-3">Unduh Data Kurban pertanggal</h4>
                 <form action="{{ url('/laporan-kurban/kurban') }}" method="POST">
                     {{ csrf_field() }}
@@ -52,7 +78,7 @@
                         </div>
                     </div>
                     <div class="d-flex justify-content-between">
-                        @if (empty(session('Kurban')))
+                        @if (empty(session('kurban')))
                         @else
                             <a target="_blank"
                                 href="{{ url('/laporan-kurban/unduh-periode/' . session('tglawal') . '/' . session('tglakhir')) }}"
@@ -68,7 +94,18 @@
                 </form>
             </div>
         </div>
-    </div>
+    </div> --}}
+
+
+    {{-- @if ($kurban->isEmpty())
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            Tidak ada data yang tersedia.
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    @else
+    @endif --}}
     <div class="row">
         <div class="col-12">
             <div class="card m-b-30">
@@ -91,7 +128,40 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @if (empty(session('Kurban')))
+                                @if ($tahun == null)
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        Tidak ada data yang tersedia, Silahkan pilih tahun terlebih dahulu.
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                @else
+                                    @foreach ($kurban as $item)
+                                        <tr>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $item->nama }}</td>
+                                            <td>{{ $item->hewan_kurban }}</td>
+                                            <td>{{ $item->jumlah }} Ekor</td>
+                                            <td>{{ $item->permintaan }}</td>
+                                            <td>{{ \Carbon\Carbon::parse($item['tanggal_masuk'])->format('d-m-Y') }}</td>
+                                            <td>
+                                                <div class="d-flex button-items">
+                                                    <a class="btn btn-info"
+                                                        href="{{ route('dashboard.kurban.edit', $item->id) }}"
+                                                        role="button"><i class="mdi mdi-lead-pencil"></i></a>
+                                                    <form action="{{ route('dashboard.kurban.destroy', $item->id) }}"
+                                                        method="POST" onsubmit="return deleteConfirmation(event)">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger"><i
+                                                                class="mdi mdi-delete"></i></button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @endif
+                                    {{-- @if (empty(session('Kurban')))
                                     @forelse ($kurban as $item)
                                         <tr>
                                             <td>{{ $loop->iteration }}</td>
@@ -141,7 +211,7 @@
                                             </td>
                                         </tr>
                                     @endforeach
-                                @endif
+                                @endif --}}
                             </tbody>
                         </table>
                     </div>

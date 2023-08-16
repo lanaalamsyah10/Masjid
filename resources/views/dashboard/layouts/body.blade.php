@@ -37,6 +37,21 @@
 
 @push('javascript')
     <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const filterForm = document.getElementById('filterForm');
+
+            // Select your Clear Filter button by its ID or any other way
+            const clearFilterButton = document.getElementById('clearFilterButton');
+
+            clearFilterButton.addEventListener('click', function(event) {
+                event.preventDefault();
+                filterForm.tahun.value = ""; // Clear the value
+                filterForm.submit();
+            });
+        });
+    </script>
+
+    <script>
         @if (session('success'))
             setTimeout(function() {
                 button.form.submit();

@@ -41,7 +41,8 @@
                                     <input type="text"
                                         class="form-control input-beras  @error('jumlah_beras') is-invalid @enderror"
                                         name="jumlah_beras" id="input-beras" step="any"
-                                        value="{{ old('jumlah_beras') }}" placeholder="jumlah_beras...">
+                                        value="{{ old('jumlah_beras') }}" placeholder="jumlah_beras..."
+                                        onkeypress="return event.charCode >= 48 && event.charCode <= 57">
                                     @error('jumlah_beras')
                                         <div class="invalid-feedback">
                                             {{ $message }}

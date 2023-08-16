@@ -67,6 +67,7 @@
     <p class="text">Jl. Garuda, Karangampel Kidul, Kec. Karangampel, Kabupaten Indramayu, Jawa Barat 45283
     </p>
     <hr class="garis">
+    <h4>Pengeluaran Kas Bulan : {{ $bulan }}</h4>
     <table style="width:100%">
         <thead>
             <tr>
@@ -77,11 +78,11 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($pengeluaran as $data)
+            @foreach ($pengeluaran_kas as $data)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $data['keterangan_pengeluaran'] }}</td>
-                    <td>{{ $data['tanggal_pengeluaran'] }}</td>
+                    <td>{{ \Carbon\Carbon::parse($data['tanggal_pengeluaran'])->format('d-m-Y') }}</td>
                     <td>{{ 'Rp ' . number_format($data->jumlah_pengeluaran, 0, ',', '.') }}</td>
                 </tr>
             @endforeach
